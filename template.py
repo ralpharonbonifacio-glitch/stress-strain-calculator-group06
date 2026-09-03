@@ -30,17 +30,18 @@ def main():
 
     print()
 
-    # BONUS TODO: Convert stress to MPa (divide by 1,000,000)
-    # BONUS TODO: Determine if loading is tension or compression
+    stress_mpa = stress / 1_000_000
+    print(f"Stress: {stress_mpa:.2f} MPa")
+
+    if change_in_length > 0:
+        print("Loading is in tension.")
+    elif change_in_length < 0:
+        print("Loading is in compression.")
+    else:
+        print("No change in length.")
 
     print()
     print("=== Analysis Complete ===")
 
 if __name__ == "__main__":
     main()
-
-
-# TODO: Add the standard Python execution pattern
-# Hint: if __name__ == "__main__":
-# Read this if you are still confused about this pattern:
-# https://www.geeksforgeeks.org/what-does-the-if-__name__-__main__-do/
