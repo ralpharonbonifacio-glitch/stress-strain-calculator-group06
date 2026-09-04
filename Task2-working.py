@@ -129,6 +129,20 @@ def main():
         print("No change in length.")
 
     print()
+    print("=== SAFETY ANALYSIS ===")
+
+    if factor_of_safety > 1.2:
+        print(f"SAFE - Factor of Safety: {factor_of_safety:.2f}")
+
+    elif factor_of_safety >= 1.0:
+        print(f"CAUTION - Factor of Safety: {factor_of_safety:.2f}")
+        print("Stress is approaching the yield strength. Consider redesigning or using a stronger material.")
+
+    else:
+        print(f"WARNING - Factor of Safety: {factor_of_safety:.2f}")
+        print("Stress exceeds the yield strength. The material is likely to fail under this load.")
+
+    print()
     print("=== Analysis Complete ===")
 
 if __name__ == "__main__":
