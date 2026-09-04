@@ -71,7 +71,7 @@ def main():
             elif material_choice == '3':
                 material = "Titanium"
                 yield_strength = 880
-                youngs_modulus = 116
+                youngs_modulus = 114
                 break
 
             elif material_choice == '4':
