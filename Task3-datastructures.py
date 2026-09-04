@@ -177,6 +177,27 @@ def main():
         print(loading_type)
 
         print("=== SAFETY ANALYSIS===")
+        if safety_result == "SAFE": 
+            print(f"SAFE - Factor of Safety: {factor_of_safety:.2f}") 
+        elif safety_result == "CAUTION": 
+            print(f"CAUTION - Factor of Safety: {factor_of_safety:.2f}") 
+            print( "Stress is approaching the yield strength. " "Consider redesigning or using a stronger material." ) 
+        else: 
+            print(f"WARNING - Factor of Safety: {factor_of_safety:.2f}") 
+            print( "Stress exceeds the yield strength. " "The material is likely to fail under this load." )
+        print()
+        print("=== ANALYSIS COMPLETE ===")
+        while True:
+            repeat = input("Would you like to perform another calculation? (y/n): ").strip(),lower()
+            if repeat =="y"
+                print("\nStarting a new calculation...\n")
+                break
+            elif repeat == "n": 
+                break 
+            else: 
+                print("Error: Please enter 'y' for yes or 'n' for no.")
+        if repeat --"n":
+            break        
 
         stress_mpa = stress / 1_000_000
         print(f"Stress: {stress_mpa:.2f} MPa")
