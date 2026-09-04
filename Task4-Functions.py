@@ -1,20 +1,24 @@
 def calculate_stress(force, area):
+    """Calculate stress (Force / Area)."""  
     return force / area
 
 
 def calculate_strain(original_length, change_in_length):
+    """Calculate strain (ΔL / L)."""
     return change_in_length / original_length
 
 def calculate_youngs_modulus(stress, strain):
+    """Calculate Young's Modulus (Stress / Strain)."""
     if strain == 0:
         return float("inf") 
     return stress / strain
 
 def calculate_stress_mpa(stress):
+    """Convert stress from Pascals to Megapascals."""
     return stress / 1000000
 
 def calculate_factor_of_safety(yield_strength, stress_mpa):
-
+    """Calculate Factor of Safety (Yield Strength / Stress)."""
     if stress_mpa > 0:
         factor_of_safety = yield_strength / stress_mpa
     else:
@@ -23,6 +27,7 @@ def calculate_factor_of_safety(yield_strength, stress_mpa):
     return factor_of_safety
 
 def safety_result(factor_of_safety):
+    """Return safety evaluation label based on safety factor."""
     if factor_of_safety > 1.2:
         safety_result = "SAFE"
     elif factor_of_safety >= 1.0:
@@ -33,6 +38,7 @@ def safety_result(factor_of_safety):
     return safety_result
 
 def loading_type(change_in_length):
+    """Determine if load is tension, compression, or static."""
     if change_in_length > 0: 
         return "Loading is in tension." 
     elif change_in_length < 0: 
@@ -41,7 +47,8 @@ def loading_type(change_in_length):
         return "No change in length."
 
 def validate_input():
-        while True:
+    """Prompt user and validate numeric inputs."""    
+    while True:
             try:
                 force = float(input("Enter applied force (N): "))
                 if force < 0:
@@ -51,7 +58,7 @@ def validate_input():
             except ValueError:
                 print("Error: Please enter a valid number for force.")
 
-        while True:
+    while True:
             try:
                 area = float(input("Enter cross-sectional area (m^2): "))
                 if area <= 0:
@@ -61,7 +68,7 @@ def validate_input():
             except ValueError:
                 print("Error: Please enter a valid number for area.")
 
-        while True:
+    while True:
             try:
                 original_length = float(input("Enter original length (m): "))
                 if original_length <= 0:
@@ -71,15 +78,15 @@ def validate_input():
             except ValueError:
                 print("Error: Please enter a valid number for original length.")
 
-        while True:
+    while True:
             try:
                 change_in_length = float(input("Enter change in length (m): "))
                 break
             except ValueError:
                 print("Error: Please enter a valid number for change in length.")
 
-        material, yield_strength, youngs_modulus = material_management()
-        if yield_strength is None:
+    material, yield_strength, youngs_modulus = material_management()
+    if yield_strength is None:
             while True:
                 try:
                     temp_yield = float(input("Enter yield strength (MPa): "))
@@ -92,11 +99,11 @@ def validate_input():
                     print("Error: Please enter a valid number for yield strength.")
 
 
-        return force, area, original_length, change_in_length, material, yield_strength, youngs_modulus
+    return force, area, original_length, change_in_length, material, yield_strength, youngs_modulus
 
 
 def material_management(calculated_youngs_modulus=None, input_yield_strength=None):
-
+    """Prompt user to select a preset or custom material."""
     materials_database = {
         "Steel": {"yield_strength": 250, "youngs_modulus": 200},
         "Aluminum": {"yield_strength": 95, "youngs_modulus": 69},
@@ -145,7 +152,7 @@ def record_calculation(calculations_history, material=None, force=None, area=Non
                        change_in_length=None, stress=None, stress_mpa=None, strain=None, 
                        youngs_modulus=None, yield_strength=None, factor_of_safety=None, 
                        safety_val=None, loading_val=None, unique_materials=None, units=None, summary=False):
-    
+    """Save calculation run to history or print final session summary."""
     if not summary:
         test_number = len(calculations_history) + 1
         calculation_record = {
@@ -230,7 +237,7 @@ def record_calculation(calculations_history, material=None, force=None, area=Non
 
 
 def display_results(stress, strain, youngs_modulus, units, stress_mpa, factor_of_safety, safety_val, loading_val):
-
+    """Print formatted calculation results to the console."""
     print()
     print("=== RESULTS ===")
     print(f"Stress: {stress:.2f} {units[3]}")
@@ -260,7 +267,6 @@ def display_results(stress, strain, youngs_modulus, units, stress_mpa, factor_of
     print("=== ANALYSIS COMPLETE ===")
 
 def main():
-
     """Main function for the stress and strain calculator."""
 
     print("=== Stress and Strain Calculator ===")
