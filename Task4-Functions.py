@@ -79,20 +79,17 @@ def validate_input():
                 print("Error: Please enter a valid number for change in length.")
 
         material, yield_strength, youngs_modulus = material_management()
-
-        while True:
-            try:
-                if yield_strength is None:
-                    yield_strength = float(input("Enter yield strength (MPa): "))
-                
-                if yield_strength <= 0:
-                    print("Error: Yield strength must be greater than zero.")
-                    yield_strength = None 
-                else:
-                    break
-            except ValueError:
-                print("Error: Please enter a valid number for yield strength.")
-                yield_strength = None
+        if yield_strength is None:
+            while True:
+                try:
+                    temp_yield = float(input("Enter yield strength (MPa): "))
+                    if temp_yield <= 0:
+                        print("Error: Yield strength must be greater than zero.")
+                    else:
+                        yield_strength = temp_yield
+                        break
+                except ValueError:
+                    print("Error: Please enter a valid number for yield strength.")
 
 
         return force, area, original_length, change_in_length, material, yield_strength, youngs_modulus
@@ -138,11 +135,7 @@ def material_management(calculated_youngs_modulus=None, input_yield_strength=Non
                 
                 elif material_choice == '4':
                     material = input("Enter custom material name: ").strip()
-                    yield_strength = float(input("Enter yield strength (MPa): "))
-
-                    youngs_modulus = calculated_youngs_modulus if calculated_youngs_modulus is not None else 0
-
-                    return material, yield_strength, youngs_modulus
+                    return material, None, None
     
                 else:
                     print("Error: Invalid selection. Please choose a number between 1 and 4.")
@@ -279,11 +272,16 @@ def main():
 
     while True:
 
-        force, area, original_length, change_in_length, material, yield_strength, youngs_modulus = validate_input()
+        force, area, original_length, change_in_length, material, yield_strength, preset_modulus = validate_input()
         stress = calculate_stress(force, area)
         strain = calculate_strain(original_length, change_in_length)
         stress_mpa = calculate_stress_mpa(stress)
-        factor_of_safety = calculate_factor_of_safety(yield_strength, stress)
+        if preset_modulus is None:
+            youngs_modulus_pa = calculate_youngs_modulus(stress, strain)
+            youngs_modulus = youngs_modulus_pa / 1e9 if youngs_modulus_pa != float("inf") else float("inf")
+        else:
+            youngs_modulus = preset_modulus 
+        factor_of_safety = calculate_factor_of_safety(yield_strength, stress_mpa)
         safety_val = safety_result(factor_of_safety)
         loading_val= loading_type(change_in_length)
 
