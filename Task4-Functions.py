@@ -38,45 +38,6 @@ def loading_type(change_in_length):
         return "No change in length."
 
 def validate_input(force, area, original_length, change_in_length):
-    """Validate that all input values are appropriate for calculations."""
-    pass
-
-def material_management(material, yield_strength, youngs_modulus, materials_database):
-    pass
-
-def record_calculation(calculations_history, material, force, area, original_length, change_in_length, stress, strain, youngs_modulus, yield_strength, factor_of_safety, safety_result, loading_type):
-    pass
-
-def display_results(stress, strain, youngs_modulus, factor_of_safety, safety_result, loading_type):
-    pass
-
-def main_calculator():
-    pass
-def main():
-    """Main function for the stress and strain calculator."""
-
-    print("=== Stress and Strain Calculator ===")
-    print()
-
-    calculations_history=[]
-    unique_materials=set()
-    units = ("N", "m^2", "m", "Pa", "MPa", "GPa")
-    materials_database = {
-        "Steel": {
-            "yield_strength": 250, 
-            "youngs_modulus": 200
-        },
-        "Aluminum": {
-            "yield_strength": 95, 
-            "youngs_modulus": 60
-        },
-        "Titanium": {
-            "yield_strength": 880, 
-            "youngs_modulus": 116
-        }}
-
-    while True:
-
         while True:
             try:
                 force = float(input("Enter applied force (N): "))
@@ -114,6 +75,42 @@ def main():
             except ValueError:
                 print("Error: Please enter a valid number for change in length.")
 
+
+def material_management(material, yield_strength, youngs_modulus, materials_database):
+    pass
+
+def record_calculation(calculations_history, material, force, area, original_length, change_in_length, stress, strain, youngs_modulus, yield_strength, factor_of_safety, safety_result, loading_type):
+    pass
+
+def display_results(stress, strain, youngs_modulus, factor_of_safety, safety_result, loading_type):
+    pass
+
+def main_calculator():
+    pass
+def main():
+    """Main function for the stress and strain calculator."""
+
+    print("=== Stress and Strain Calculator ===")
+    print()
+
+    calculations_history=[]
+    unique_materials=set()
+    units = ("N", "m^2", "m", "Pa", "MPa", "GPa")
+    materials_database = {
+        "Steel": {
+            "yield_strength": 250, 
+            "youngs_modulus": 200
+        },
+        "Aluminum": {
+            "yield_strength": 95, 
+            "youngs_modulus": 60
+        },
+        "Titanium": {
+            "yield_strength": 880, 
+            "youngs_modulus": 116
+        }}
+
+    while True:
         while True:
             print()
             print("===Material Properties===")
@@ -173,7 +170,7 @@ def main():
                 print("Error: Invalid selection. Please choose a number between 1 and 4.")
 
 
-    
+        force, area, original_length, change_in_length = validate_input()
         stress = calculate_stress(force, area)
         strain = calculate_strain(original_length, change_in_length)
         stress_mpa = calculate_stress_mpa(stress)
