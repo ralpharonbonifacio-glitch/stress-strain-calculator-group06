@@ -148,34 +148,10 @@ def material_management(calculated_youngs_modulus=None, input_yield_strength=Non
                     print("Error: Invalid selection. Please choose a number between 1 and 4.")
     
 
-def record_calculation(calculations_history,material=None, force=None, area=None, original_length=None, change_in_length=None,
-                       stress=None, stress_mpa=None, strain=None, youngs_modulus=None, yield_strength=None, factor_of_safety=None,
-                        safety_val=None, loading_val=None, unique_materials=None, units=None, summary=False):
-    
-    calculations_history=[]
-    unique_materials=set()
-    units = ("N", "m^2", "m", "Pa", "MPa", "GPa")
-    test_number = len(calculations_history)+1
-    calculation_record = {
-            "test_number": test_number,
-            "material": material, 
-            "force": force, 
-            "area": area, 
-            "original_length": original_length, 
-            "change_in_length": change_in_length, 
-            "stress": stress, 
-            "stress_mpa": stress_mpa, 
-            "strain": strain, 
-            "youngs_modulus": youngs_modulus, 
-            "yield_strength": yield_strength, 
-            "factor_of_safety": factor_of_safety, 
-            "safety_result": safety_val, 
-            "loading_type": loading_val,
-            "unique_materials": unique_materials,
-            "units": units,
-            "summary": summary
-        }
-    calculations_history.append(calculation_record)
+def record_calculation(calculations_history, material=None, force=None, area=None, original_length=None, 
+                       change_in_length=None, stress=None, stress_mpa=None, strain=None, 
+                       youngs_modulus=None, yield_strength=None, factor_of_safety=None, 
+                       safety_val=None, loading_val=None, unique_materials=None, units=None, summary=False):
     
     if not summary:
         test_number = len(calculations_history) + 1
@@ -213,8 +189,7 @@ def record_calculation(calculations_history,material=None, force=None, area=None
         print("\n=== CALCULATION HISTORY ===")
 
         for record in calculations_history:
-            print()
-            print(f"Test #{record['test_number']}")
+            print(f"\nTest #{record['test_number']}")
             print(f"Material: {record['material']}")
             print(f"Force: {record['force']:.2f} {units[0]}")
             print(f"Area: {record['area']:.2f} {units[1]}")
@@ -230,47 +205,29 @@ def record_calculation(calculations_history,material=None, force=None, area=None
             print(f"{record['loading_type']}")
 
         print("\n=== SESSION STATISTICS ===")
-        highest_stress = max(
-            calculations_history, key=lambda record: record["stress"]
-        )
-        lowest_safety = min(
-            calculations_history, key=lambda record: record["factor_of_safety"]
-        )
-        average_strain = sum(
-            record["strain"] for record in calculations_history
-        ) / len(calculations_history)
+        highest_stress = max(calculations_history, key=lambda r: r["stress"])
+        lowest_safety = min(calculations_history, key=lambda r: r["factor_of_safety"])
+        average_strain = sum(r["strain"] for r in calculations_history) / len(calculations_history)
 
-        print(
-            f"Highest stress: {highest_stress['stress_mpa']:.2f} MPa ({highest_stress['material']})"
-        )
-        print(
-            f"Lowest factor of safety: {lowest_safety['factor_of_safety']:.2f} ({lowest_safety['material']})"
-        )
+        print(f"Highest stress: {highest_stress['stress_mpa']:.2f} MPa ({highest_stress['material']})")
+        print(f"Lowest factor of safety: {lowest_safety['factor_of_safety']:.2f} ({lowest_safety['material']})")
         print(f"Average strain: {average_strain:.6f}")
 
         material_counts = {}
         for record in calculations_history:
-            material_name = record["material"]
-            material_counts[material_name] = (
-                material_counts.get(material_name, 0) + 1
-            )
+            mat = record["material"]
+            material_counts[mat] = material_counts.get(mat, 0) + 1
 
         print("\nMaterial test counts:")
-        for material_name, count in material_counts.items():
-            print(f"- {material_name}: {count}")
+        for mat, count in material_counts.items():
+            print(f"- {mat}: {count}")
 
-        failed_tests = [
-            record
-            for record in calculations_history
-            if record["safety_result"] != "SAFE"
-        ]
+        failed_tests = [r for r in calculations_history if r["safety_result"] != "SAFE"]
 
         print("\nMaterials that failed or require caution:")
         if failed_tests:
             for record in failed_tests:
-                print(
-                    f"- {record['material']} (Test #{record['test_number']}): {record['safety_result']}"
-                )
+                print(f"- {record['material']} (Test #{record['test_number']}): {record['safety_result']}")
         else:
             print("None")
     else:
@@ -309,10 +266,6 @@ def display_results(stress, strain, youngs_modulus, units, stress_mpa, factor_of
         
     print("=== ANALYSIS COMPLETE ===")
 
-
-def main_calculator():
-    pass
-
 def main():
 
     """Main function for the stress and strain calculator."""
@@ -320,8 +273,8 @@ def main():
     print("=== Stress and Strain Calculator ===")
     print()
 
-    calculations_history=[]
-    unique_materials=set()
+    calculations_history = []
+    unique_materials = set()
     units = ("N", "m^2", "m", "Pa", "MPa", "GPa")
 
     while True:
@@ -351,7 +304,7 @@ def main():
                 loading_val=loading_val,
         )
         unique_materials.add(material)
-        
+
         display_results(stress, strain, youngs_modulus, units, stress_mpa, factor_of_safety, safety_val, loading_val)
 
 
