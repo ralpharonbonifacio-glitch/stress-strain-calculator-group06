@@ -159,20 +159,24 @@ def main():
             "loading_type": loading_type
         }
         calculation_history.append(calculation_record)
-        
+        unique_materials.add(material)
         print()
         print("=== RESULTS ===")
-        print(f"Applied Force: {force:.2f} N")
-        print(f"Cross-sectional Area: {area:.2f} m^2")
-        print(f"Original Length: {original_length:.2f} m")
-        print(f"Change in Length: {change_in_length:.2f} m")
+        print(f"Applied Force: {force:.2f} {units[0]}")
+        print(f"Cross-sectional Area: {area:.2f} {units[1]}")
+        print(f"Original Length: {original_length:.2f} {units[2]}")
+        print(f"Change in Length: {change_in_length:.2f} {units[2]}")
 
         print()
-        print(f"Stress: {stress:.2f} Pa")
+        print(f"Stress: {stress:.2f} {units[3]}")
         print(f"Strain: {strain:.6f}")
+        print(f"Stress: {stress_mpa:.2f}{units[4]}")
 
 
         print()
+        print(loading_type)
+
+        print("=== SAFETY ANALYSIS===")
 
         stress_mpa = stress / 1_000_000
         print(f"Stress: {stress_mpa:.2f} MPa")
