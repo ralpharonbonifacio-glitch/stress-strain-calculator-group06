@@ -5,7 +5,7 @@ def main():
     print()
 
     calculations_history=[]
-    unique_materials=()
+    unique_materials=set()
     units = ("N", "m^2", "m", "Pa", "MPa", "GPa")
     materials_database = {
         "Steel": {
@@ -128,7 +128,7 @@ def main():
             factor_of_safety = yield_strength / stress_mpa
         else:
             factor_of_safety = float("inf")
-        if factor_of_safety >1,2:
+        if factor_of_safety >1.2:
             safety_result = "SAFE"
         elif factor_of_safety >= 1.0: 
             safety_result = "CAUTION" 
@@ -158,7 +158,8 @@ def main():
             "safety_result": safety_result, 
             "loading_type": loading_type
         }
-        calculation_history.append(calculation_record)
+        calculations_history.append(calculation_record)
+
         unique_materials.add(material)
         print()
         print("=== RESULTS ===")
@@ -188,59 +189,80 @@ def main():
         print()
         print("=== ANALYSIS COMPLETE ===")
         while True:
-            repeat = input("Would you like to perform another calculation? (y/n): ").strip(),lower()
-            if repeat =="y"
+            repeat = input("Would you like to perform another calculation? (y/n): ").strip().lower()
+            if repeat =="y":
                 print("\nStarting a new calculation...\n")
                 break
             elif repeat == "n": 
                 break 
             else: 
                 print("Error: Please enter 'y' for yes or 'n' for no.")
-        if repeat --"n":
+        if repeat == "n":
             break        
 
-        stress_mpa = stress / 1_000_000
-        print(f"Stress: {stress_mpa:.2f} MPa")
+    print("\n" + "=" * 50) 
+    print("SESSION SUMMARY") 
+    print("=" * 50) 
+    
+    print(f"Total calculations: {len(calculations_history)}") 
+    if unique_materials: 
+        print( f"Unique materials tested: " f"{', '.join(sorted(unique_materials))}" ) 
+        print(f"Number of unique materials: {len(unique_materials)}") 
+    else: 
+        print("Unique materials tested: None")
 
-        if stress_mpa > 0:
-            factor_of_safety = yield_strength / stress_mpa
-        else:
-            factor_of_safety = float('inf')
-
-        if change_in_length > 0:
-            print("Loading is in tension.")
-        elif change_in_length < 0:
-            print("Loading is in compression.")
-        else:
-            print("No change in length.")
-
-        print()
-        print("=== SAFETY ANALYSIS ===")
-
-        if factor_of_safety > 1.2:
-            print(f"SAFE - Factor of Safety: {factor_of_safety:.2f}")
-
-        elif factor_of_safety >= 1.0:
-            print(f"CAUTION - Factor of Safety: {factor_of_safety:.2f}")
-            print("Stress is approaching the yield strength. Consider redesigning or using a stronger material.")
-
-        else:
-            print(f"WARNING - Factor of Safety: {factor_of_safety:.2f}")
-            print("Stress exceeds the yield strength. The material is likely to fail under this load.")
-
-        print()
-        print("=== Analysis Complete ===")
-
-        while True:
-            repeat = input("Would you like to perform another calculation? (y/n): ").strip().lower()
-            if repeat == 'y':
-                print("\nStarting a new calculation...\n")
-                break
-            elif repeat == 'n':
-                print("Exiting the calculator. Goodbye!")
-                return
-            else:
-                print("Error: Please enter 'y' for yes or 'n' for no.")
+    if calculations_history:
+        print("\n=== CALCULATION HISTORY ===") 
+        
+        for record in calculations_history: 
+            print() 
+            print(f"Test #{record['test_number']}") 
+            print(f"Material: {record['material']}") 
+            print(f"Force: {record['force']:.2f} {units[0]}") 
+            print(f"Area: {record['area']:.2f} {units[1]}") 
+            print( f"Original Length: " f"{record['original_length']:.2f} {units[2]}" ) 
+            print( f"Change in Length: " f"{record['change_in_length']:.2f} {units[2]}" ) 
+            print(f"Stress: {record['stress']:.2f} {units[3]}") 
+            print(f"Stress: {record['stress_mpa']:.2f} {units[4]}") 
+            print(f"Strain: {record['strain']:.6f}") 
+            print( f"Young's Modulus: " f"{record['youngs_modulus']:.2f} {units[5]}" ) 
+            print(f"Yield Strength: {record['yield_strength']:.2f} {units[4]}") 
+            print( f"Factor of Safety: " f"{record['factor_of_safety']:.2f}" ) 
+            print(f"Safety Result: {record['safety_result']}") 
+            print(f"{record['loading_type']}") 
+            
+        print("\n=== SESSION STATISTICS ===") 
+        highest_stress = max( calculations_history, key=lambda record: record["stress"] ) 
+        lowest_safety = min( calculations_history, key=lambda record: record["factor_of_safety"] ) 
+        average_strain = sum( record["strain"] for record in calculations_history ) / len(calculations_history) 
+        print( f"Highest stress: " f"{highest_stress['stress_mpa']:.2f} MPa " f"({highest_stress['material']})" ) 
+        print( f"Lowest factor of safety: " f"{lowest_safety['factor_of_safety']:.2f} " f"({lowest_safety['material']})" ) 
+        print(f"Average strain: {average_strain:.6f}")  
+        material_counts={}
+        for record in calculations_history: 
+            material_name = record["material"] 
+            if material_name in material_counts: 
+                material_counts[material_name] += 1 
+            else: 
+                material_counts[material_name] = 1 
+        print("\nMaterial test counts:") 
+        for material_name, count in material_counts.items(): 
+            print(f"- {material_name}: {count}")  
+        failed_tests = [ 
+            record 
+            for record in calculations_history 
+            if record["safety_result"] != "SAFE" ] 
+        print("\nMaterials that failed or require caution:") 
+        if failed_tests: 
+            for record in failed_tests: 
+                print( f"- {record['material']} " 
+                f"(Test #{record['test_number']}): " 
+                f"{record['safety_result']}" ) 
+        else: 
+            print("None") 
+    else: 
+        print("\nNo calculations were performed.") 
+    print("\n=== Session Complete ===")
 
 if __name__ == "__main__":
     main()
