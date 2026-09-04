@@ -89,8 +89,47 @@ def validate_input():
                     print("Error: Please enter a valid number for yield strength.")
 
 
-def material_management(material, yield_strength, youngs_modulus, materials_database):
-    pass
+def material_management(materials_database):
+    while True:
+                print()
+                print("===Material Properties===")
+                print("1. Steel")
+                print("2. Aluminum")
+                print("3. Titanium")
+                print("4. Custom Material")
+    
+                material_choice = input("Select a material (1-4): ")
+    
+                if material_choice == '1':
+                    material = "Steel"
+                    yield_strength = materials_database["Steel"]["yield_strength"]
+                    youngs_modulus = materials_database["Steel"]["youngs_modulus"]
+                    break
+    
+                elif material_choice == '2':
+                    material = "Aluminum"
+                    yield_strength = materials_database["Aluminum"]["yield_strength"]
+                    youngs_modulus = materials_database["Aluminum"]["youngs_modulus"]
+                    break
+    
+                elif material_choice == '3':
+                    material = "Titanium"
+                    yield_strength = materials_database["Titanium"]["yield_strength"]
+                    youngs_modulus = materials_database["Titanium"]["youngs_modulus"]
+                    break
+    
+                elif material_choice == '4':
+                    material = input("Enter custom material name: ").strip()
+    
+                    materials_database[material] = { 
+                        "yield_strength": yield_strength, 
+                        "youngs_modulus": youngs_modulus}
+
+                    return material
+    
+                else:
+                    print("Error: Invalid selection. Please choose a number between 1 and 4.")
+    
 
 def record_calculation(calculations_history, material, force, area, original_length, change_in_length, stress, strain, youngs_modulus, yield_strength, factor_of_safety, safety_result, loading_type):
     pass
@@ -100,7 +139,9 @@ def display_results(stress, strain, youngs_modulus, factor_of_safety, safety_res
 
 def main_calculator():
     pass
+
 def main():
+
     """Main function for the stress and strain calculator."""
 
     print("=== Stress and Strain Calculator ===")
@@ -124,51 +165,15 @@ def main():
         }}
 
     while True:
-        while True:
-            print()
-            print("===Material Properties===")
-            print("1. Steel")
-            print("2. Aluminum")
-            print("3. Titanium")
-            print("4. Custom Material")
-
-            material_choice = input("Select a material (1-4): ")
-
-            if material_choice == '1':
-                material = "Steel"
-                yield_strength = materials_database["Steel"]["yield_strength"]
-                youngs_modulus = materials_database["Steel"]["youngs_modulus"]
-                break
-
-            elif material_choice == '2':
-                material = "Aluminum"
-                yield_strength = materials_database["Aluminum"]["yield_strength"]
-                youngs_modulus = materials_database["Aluminum"]["youngs_modulus"]
-                break
-
-            elif material_choice == '3':
-                material = "Titanium"
-                yield_strength = materials_database["Titanium"]["yield_strength"]
-                youngs_modulus = materials_database["Titanium"]["youngs_modulus"]
-                break
-
-            elif material_choice == '4':
-                material = input("Enter custom material name: ").strip()
-
-                materials_database[material] = { 
-                    "yield_strength": yield_strength, 
-                    "youngs_modulus": youngs_modulus}
-                break
-
-            else:
-                print("Error: Invalid selection. Please choose a number between 1 and 4.")
 
 
-        force, area, original_length, change_in_length = validate_input()
+        force, area, original_length, change_in_length, yield_strength = validate_input()
         stress = calculate_stress(force, area)
         strain = calculate_strain(original_length, change_in_length)
         stress_mpa = calculate_stress_mpa(stress)
         factor_of_safety = calculate_factor_of_safety(yield_strength, stress)
+        youngs_modulus = calculate_youngs_modulus(stress, strain)
+        material = material_management(materials_database)
         safety_result = safety_result(factor_of_safety)
         loading_type = loading_type(change_in_length)
 
