@@ -13,10 +13,10 @@ def calculate_youngs_modulus(stress, strain):
 def calculate_stress_mpa(stress):
     return stress / 1000000
 
-def calculate_factor_of_safety(yield_strength, stress):
+def calculate_factor_of_safety(yield_strength, stress_mpa):
 
-    if calculate_stress_mpa(stress) > 0:
-        factor_of_safety = yield_strength / calculate_stress_mpa(stress)
+    if stress_mpa > 0:
+        factor_of_safety = yield_strength / stress_mpa
     else:
         factor_of_safety = float("inf")
 
@@ -132,7 +132,25 @@ def material_management(materials_database):
     
 
 def record_calculation(calculations_history, material, force, area, original_length, change_in_length, stress, strain, youngs_modulus, yield_strength, factor_of_safety, safety_result, loading_type):
-    pass
+    test_number = len(calculations_history)+1
+    calculation_record = {
+            "test_number": test_number,
+            "material": material, 
+            "force": force, 
+            "area": area, 
+            "original_length": original_length, 
+            "change_in_length": change_in_length, 
+            "stress": stress, 
+            "stress_mpa": stress_mpa, 
+            "strain": strain, 
+            "youngs_modulus": youngs_modulus, 
+            "yield_strength": yield_strength, 
+            "factor_of_safety": factor_of_safety, 
+            "safety_result": safety_result, 
+            "loading_type": loading_type
+        }
+    calculations_history.append(calculation_record)
+
 
 def display_results(stress, strain, youngs_modulus, factor_of_safety, safety_result, loading_type):
     pass
@@ -197,6 +215,7 @@ def main():
             "loading_type": loading_type
         }
         calculations_history.append(calculation_record)
+
 
         unique_materials.add(material)
         print()
