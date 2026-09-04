@@ -7,8 +7,19 @@ def main():
     calculations_history=[]
     unique_materials=()
     units = ("N", "m^2", "m", "Pa", "MPa", "GPa")
-    
-
+    materials_database = {
+        "Steel": {
+            "yield_strength": 250, 
+            "youngs modulus": 200
+        },
+        "Aluminum": {
+            "yield_strength": 95, 
+            "youngs modulus": 60
+        },
+        "Titanium": {
+            "yield_strength": 880, 
+            "youngs modulus": 116
+        }}
 
     while True:
 
