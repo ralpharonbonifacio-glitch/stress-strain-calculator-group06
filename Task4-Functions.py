@@ -78,18 +78,27 @@ def validate_input():
             except ValueError:
                 print("Error: Please enter a valid number for change in length.")
 
+        material, yield_strength, youngs_modulus = material_management()
+
         while True:
             try:
-                yield_strength = float(input("Enter yield strength (MPa): "))
+                if yield_strength is None:
+                    yield_strength = float(input("Enter yield strength (MPa): "))
+                
                 if yield_strength <= 0:
                     print("Error: Yield strength must be greater than zero.")
+                    yield_strength = None 
                 else:
                     break
             except ValueError:
-                    print("Error: Please enter a valid number for yield strength.")
+                print("Error: Please enter a valid number for yield strength.")
+                yield_strength = None
 
 
-def material_management():
+        return force, area, original_length, change_in_length, material, yield_strength, youngs_modulus
+
+
+def material_management(calculated_youngs_modulus=None, input_yield_strength=None):
 
     materials_database = {
         "Steel": {"yield_strength": 250, "youngs_modulus": 200},
@@ -123,21 +132,19 @@ def material_management():
                     yield_strength = materials_database["Titanium"]["yield_strength"]
                     youngs_modulus = materials_database["Titanium"]["youngs_modulus"]
                     break
-    
                 elif material_choice == '4':
                     material = input("Enter custom material name: ").strip()
-    
-                    materials_database[material] = { 
-                        "yield_strength": yield_strength, 
-                        "youngs_modulus": youngs_modulus}
+                    yield_strength = float(input("Enter yield strength (MPa): "))
 
-                    return material
+                    youngs_modulus = calculated_youngs_modulus if calculated_youngs_modulus is not None else 0
+
+                    return material, yield_strength, youngs_modulus
     
                 else:
                     print("Error: Invalid selection. Please choose a number between 1 and 4.")
     
 
-def record_calculation(calculations_history, material, force, area, original_length, change_in_length, stress, stress_mpa, strain, youngs_modulus, yield_strength, factor_of_safety, safety_result, loading_type):
+def record_calculation(calculations_history, material, force, area, original_length, change_in_length, stress, stress_mpa, strain, youngs_modulus, yield_strength, factor_of_safety, safety_val, loading_val):
     test_number = len(calculations_history)+1
     calculation_record = {
             "test_number": test_number,
@@ -152,13 +159,13 @@ def record_calculation(calculations_history, material, force, area, original_len
             "youngs_modulus": youngs_modulus, 
             "yield_strength": yield_strength, 
             "factor_of_safety": factor_of_safety, 
-            "safety_result": safety_result, 
-            "loading_type": loading_type
+            "safety_result": safety_val, 
+            "loading_type": loading_val 
         }
     calculations_history.append(calculation_record)
 
 
-def display_results(stress, strain, youngs_modulus, units, stress_mpa, factor_of_safety, safety_result, loading_type):
+def display_results(stress, strain, youngs_modulus, units, stress_mpa, factor_of_safety, safety_val, loading_val):
 
     print()
     print("=== RESULTS ===")
@@ -168,12 +175,12 @@ def display_results(stress, strain, youngs_modulus, units, stress_mpa, factor_of
     print(f"Young's Modulus: {youngs_modulus:.2f} {units[5]}")
 
     print()
-    print(loading_type)
+    print(loading_val)
 
     print("=== SAFETY ANALYSIS===")
-    if safety_result == "SAFE":
+    if safety_val == "SAFE":
         print(f"SAFE - Factor of Safety: {factor_of_safety:.2f}")
-    elif safety_result == "CAUTION":
+    elif safety_val == "CAUTION":
         print(f"CAUTION - Factor of Safety: {factor_of_safety:.2f}")
         print(
             "Stress is approaching the yield strength. "
@@ -185,7 +192,7 @@ def display_results(stress, strain, youngs_modulus, units, stress_mpa, factor_of
             "Stress exceeds the yield strength. "
             "The material is likely to fail under this load."
         )
-    
+
 
 def main_calculator():
     pass
@@ -203,15 +210,13 @@ def main():
 
     while True:
 
-        force, area, original_length, change_in_length, yield_strength = validate_input()
+        force, area, original_length, change_in_length, material, yield_strength, youngs_modulus = validate_input()
         stress = calculate_stress(force, area)
         strain = calculate_strain(original_length, change_in_length)
         stress_mpa = calculate_stress_mpa(stress)
         factor_of_safety = calculate_factor_of_safety(yield_strength, stress)
-        youngs_modulus = calculate_youngs_modulus(stress, strain)
-        material = material_management()
-        safety_result = safety_result(factor_of_safety)
-        loading_type = loading_type(change_in_length)
+        safety_val = safety_result(factor_of_safety)
+        loading_val= loading_type(change_in_length)
 
 
 
@@ -230,12 +235,12 @@ def main():
 
 
         print()
-        print(loading_type)
+        print(loading_val)
 
         print("=== SAFETY ANALYSIS===")
-        if safety_result == "SAFE": 
+        if safety_val == "SAFE": 
             print(f"SAFE - Factor of Safety: {factor_of_safety:.2f}") 
-        elif safety_result == "CAUTION": 
+        elif safety_val == "CAUTION": 
             print(f"CAUTION - Factor of Safety: {factor_of_safety:.2f}") 
             print( "Stress is approaching the yield strength. " "Consider redesigning or using a stronger material." ) 
         else: 
