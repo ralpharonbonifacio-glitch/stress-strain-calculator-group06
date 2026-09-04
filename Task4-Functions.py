@@ -1,40 +1,57 @@
-def validate_input(force, area, original_length, change_in_length):
-    """Validate that all input values are appropriate for calculations."""
-    if force < 0:
-        raise ValueError("Force cannot be negative.") 
-
-    if area <= 0:
-        raise ValueError("Area must be greater than zero.")
-
-    if original_length <= 0:
-        raise ValueError("Original length must be greater than zero.")
-
-    if change_in_length < 0:
-        raise ValueError("Change in length cannot be negative.")    
-
 def calculate_stress(force, area):
-    """Calculate stress based on force and area."""
-    stress = force / area
-    return stress
-
+    return force / area
 
 
 def calculate_strain(original_length, change_in_length):
-    """Calculate strain based on original length and change in length."""
-    strain = change_in_length / original_length
-    return strain
-
+    return change_in_length / original_length
 
 def calculate_youngs_modulus(stress, strain):
-    """Calculate Young's modulus from stress and strain."""
-    youngs_modulus = stress / strain
-    return youngs_modulus
+    if strain == 0:
+        return float("inf") 
+    return stress / strain
 
-def main_calculator(material, force, area, original_length, change_in_length):
-    """Main function to orchestrate the stress-strain calculations."""
-    # Your main logic here
+def calculate_stress_mpa(stress):
+    return stress / 1000000
+
+def factor_of_safety(yield_strength, stress):
+
+    if calculate_stress_mpa(stress) > 0:
+        factor_of_safety = yield_strength / calculate_stress_mpa(stress)
+    else:
+        factor_of_safety = float("inf")
+
+    if factor_of_safety > 1.2:
+        safety_result = "SAFE"
+    elif factor_of_safety >= 1.0:
+        safety_result = "CAUTION"
+    else:
+        safety_result = "WARNING"
+
+    return factor_of_safety, safety_result
+
+def loading_type(change_in_length):
+    if change_in_length > 0: 
+        return "Loading is in tension." 
+    elif change_in_length < 0: 
+        return "Loading is in compression." 
+    else: 
+        return "No change in length."
+
+def validate_input(force, area, original_length, change_in_length):
+    """Validate that all input values are appropriate for calculations."""
     pass
 
+def material_management(material, yield_strength, youngs_modulus, materials_database):
+    pass
+
+def record_calculation(calculations_history, material, force, area, original_length, change_in_length, stress, strain, youngs_modulus, yield_strength, factor_of_safety, safety_result, loading_type):
+    pass
+
+def display_results(stress, strain, youngs_modulus, factor_of_safety, safety_result, loading_type):
+    pass
+
+def main_calculator():
+    pass
 def main():
     """Main function for the stress and strain calculator."""
 
@@ -157,26 +174,13 @@ def main():
 
 
     
-        stress = force / area
-        strain = change_in_length / original_length
+        stress = calculate_stress(force, area)
+        strain = calculate_strain(original_length, change_in_length)
+        stress_mpa = calculate_stress_mpa(stress)
+        safety_result = factor_of_safety(yield_strength, stress)
+        loading_type = loading_type(change_in_length)
 
-        stress_mpa = stress / 1000000
-        if stress_mpa >0:
-            factor_of_safety = yield_strength / stress_mpa
-        else:
-            factor_of_safety = float("inf")
-        if factor_of_safety >1.2:
-            safety_result = "SAFE"
-        elif factor_of_safety >= 1.0: 
-            safety_result = "CAUTION" 
-        else: 
-            safety_result = "WARNING"
-        if change_in_length > 0: 
-            loading_type = "Loading is in tension." 
-        elif change_in_length < 0: 
-            loading_type = "Loading is in compression." 
-        else: 
-            loading_type = "No change in length."
+
 
         test_number = len(calculations_history)+1
         calculation_record = {
