@@ -157,11 +157,11 @@ def main():
         },
         "Aluminum": {
             "yield_strength": 95, 
-            "youngs_modulus": 60
+            "youngs_modulus": 69
         },
         "Titanium": {
             "yield_strength": 880, 
-            "youngs_modulus": 116
+            "youngs_modulus": 114
         }}
 
     while True:
