@@ -123,7 +123,43 @@ def main():
         stress = force / area
         strain = change_in_length / original_length
 
+        stress_mpa = stress / 1000000
+        if stress_mpa >0:
+            factor_of_safety = yield_strength / stress_mpa
+        else:
+            factor_of_safety = float("inf")
+        if factor_of_safety >1,2:
+            safety_result = "SAFE"
+        elif factor_of_safety >= 1.0: 
+            safety_result = "CAUTION" 
+        else: 
+            safety_result = "WARNING"
+        if change_in_length > 0: 
+            loading_type = "Loading is in tension." 
+        elif change_in_length < 0: 
+            loading_type = "Loading is in compression." 
+        else: 
+            loading_type = "No change in length."
 
+        test_number = len(calculations_history)+1
+        calculation_record = {
+            "test_number": test_number,
+            "material": material, 
+            "force": force, 
+            "area": area, 
+            "original_length": original_length, 
+            "change_in_length": change_in_length, 
+            "stress": stress, 
+            "stress_mpa": stress_mpa, 
+            "strain": strain, 
+            "youngs_modulus": youngs_modulus, 
+            "yield_strength": yield_strength, 
+            "factor_of_safety": factor_of_safety, 
+            "safety_result": safety_result, 
+            "loading_type": loading_type
+        }
+        calculation_history.append(calculation_record)
+        
         print()
         print("=== RESULTS ===")
         print(f"Applied Force: {force:.2f} N")
