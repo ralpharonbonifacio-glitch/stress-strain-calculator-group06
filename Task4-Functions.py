@@ -13,13 +13,16 @@ def calculate_youngs_modulus(stress, strain):
 def calculate_stress_mpa(stress):
     return stress / 1000000
 
-def factor_of_safety(yield_strength, stress):
+def calculate_factor_of_safety(yield_strength, stress):
 
     if calculate_stress_mpa(stress) > 0:
         factor_of_safety = yield_strength / calculate_stress_mpa(stress)
     else:
         factor_of_safety = float("inf")
 
+    return factor_of_safety
+
+def safety_result(factor_of_safety):
     if factor_of_safety > 1.2:
         safety_result = "SAFE"
     elif factor_of_safety >= 1.0:
@@ -27,7 +30,7 @@ def factor_of_safety(yield_strength, stress):
     else:
         safety_result = "WARNING"
 
-    return factor_of_safety, safety_result
+    return safety_result
 
 def loading_type(change_in_length):
     if change_in_length > 0: 
@@ -37,7 +40,7 @@ def loading_type(change_in_length):
     else: 
         return "No change in length."
 
-def validate_input(force, area, original_length, change_in_length):
+def validate_input():
         while True:
             try:
                 force = float(input("Enter applied force (N): "))
@@ -74,6 +77,16 @@ def validate_input(force, area, original_length, change_in_length):
                 break
             except ValueError:
                 print("Error: Please enter a valid number for change in length.")
+
+        while True:
+            try:
+                yield_strength = float(input("Enter yield strength (MPa): "))
+                if yield_strength <= 0:
+                    print("Error: Yield strength must be greater than zero.")
+                else:
+                    break
+            except ValueError:
+                    print("Error: Please enter a valid number for yield strength.")
 
 
 def material_management(material, yield_strength, youngs_modulus, materials_database):
@@ -142,25 +155,6 @@ def main():
             elif material_choice == '4':
                 material = input("Enter custom material name: ").strip()
 
-                while True:
-                    try:
-                        yield_strength = float(input("Enter yield strength (MPa): "))
-                        if yield_strength <= 0:
-                            print("Error: Yield strength must be greater than zero.")
-                        else:
-                            break
-                    except ValueError:
-                        print("Error: Please enter a valid number for yield strength.")
-
-                while True:
-                    try:
-                        youngs_modulus = float(input("Enter Young's modulus (GPa): "))
-                        if youngs_modulus <= 0:
-                            print("Error: Young's modulus must be greater than zero.")
-                        else:
-                            break
-                    except ValueError:
-                        print("Error: Please enter a valid number for Young's modulus.")
                 materials_database[material] = { 
                     "yield_strength": yield_strength, 
                     "youngs_modulus": youngs_modulus}
@@ -174,7 +168,8 @@ def main():
         stress = calculate_stress(force, area)
         strain = calculate_strain(original_length, change_in_length)
         stress_mpa = calculate_stress_mpa(stress)
-        safety_result = factor_of_safety(yield_strength, stress)
+        factor_of_safety = calculate_factor_of_safety(yield_strength, stress)
+        safety_result = safety_result(factor_of_safety)
         loading_type = loading_type(change_in_length)
 
 
