@@ -89,7 +89,13 @@ def validate_input():
                     print("Error: Please enter a valid number for yield strength.")
 
 
-def material_management(materials_database):
+def material_management():
+
+    materials_database = {
+        "Steel": {"yield_strength": 250, "youngs_modulus": 200},
+        "Aluminum": {"yield_strength": 95, "youngs_modulus": 69},
+        "Titanium": {"yield_strength": 880, "youngs_modulus": 114}}
+    
     while True:
                 print()
                 print("===Material Properties===")
@@ -131,7 +137,7 @@ def material_management(materials_database):
                     print("Error: Invalid selection. Please choose a number between 1 and 4.")
     
 
-def record_calculation(calculations_history, material, force, area, original_length, change_in_length, stress, strain, youngs_modulus, yield_strength, factor_of_safety, safety_result, loading_type):
+def record_calculation(calculations_history, material, force, area, original_length, change_in_length, stress, stress_mpa, strain, youngs_modulus, yield_strength, factor_of_safety, safety_result, loading_type):
     test_number = len(calculations_history)+1
     calculation_record = {
             "test_number": test_number,
@@ -152,8 +158,34 @@ def record_calculation(calculations_history, material, force, area, original_len
     calculations_history.append(calculation_record)
 
 
-def display_results(stress, strain, youngs_modulus, factor_of_safety, safety_result, loading_type):
-    pass
+def display_results(stress, strain, youngs_modulus, units, stress_mpa, factor_of_safety, safety_result, loading_type):
+
+    print()
+    print("=== RESULTS ===")
+    print(f"Stress: {stress:.2f} {units[3]}")
+    print(f"Strain: {strain:.6f}")
+    print(f"Stress: {stress_mpa:.2f}{units[4]}")
+    print(f"Young's Modulus: {youngs_modulus:.2f} {units[5]}")
+
+    print()
+    print(loading_type)
+
+    print("=== SAFETY ANALYSIS===")
+    if safety_result == "SAFE":
+        print(f"SAFE - Factor of Safety: {factor_of_safety:.2f}")
+    elif safety_result == "CAUTION":
+        print(f"CAUTION - Factor of Safety: {factor_of_safety:.2f}")
+        print(
+            "Stress is approaching the yield strength. "
+            "Consider redesigning or using a stronger material."
+        )
+    else:
+        print(f"WARNING - Factor of Safety: {factor_of_safety:.2f}")
+        print(
+            "Stress exceeds the yield strength. "
+            "The material is likely to fail under this load."
+        )
+    
 
 def main_calculator():
     pass
@@ -168,22 +200,8 @@ def main():
     calculations_history=[]
     unique_materials=set()
     units = ("N", "m^2", "m", "Pa", "MPa", "GPa")
-    materials_database = {
-        "Steel": {
-            "yield_strength": 250, 
-            "youngs_modulus": 200
-        },
-        "Aluminum": {
-            "yield_strength": 95, 
-            "youngs_modulus": 69
-        },
-        "Titanium": {
-            "yield_strength": 880, 
-            "youngs_modulus": 114
-        }}
 
     while True:
-
 
         force, area, original_length, change_in_length, yield_strength = validate_input()
         stress = calculate_stress(force, area)
@@ -191,30 +209,10 @@ def main():
         stress_mpa = calculate_stress_mpa(stress)
         factor_of_safety = calculate_factor_of_safety(yield_strength, stress)
         youngs_modulus = calculate_youngs_modulus(stress, strain)
-        material = material_management(materials_database)
+        material = material_management()
         safety_result = safety_result(factor_of_safety)
         loading_type = loading_type(change_in_length)
 
-
-
-        test_number = len(calculations_history)+1
-        calculation_record = {
-            "test_number": test_number,
-            "material": material, 
-            "force": force, 
-            "area": area, 
-            "original_length": original_length, 
-            "change_in_length": change_in_length, 
-            "stress": stress, 
-            "stress_mpa": stress_mpa, 
-            "strain": strain, 
-            "youngs_modulus": youngs_modulus, 
-            "yield_strength": yield_strength, 
-            "factor_of_safety": factor_of_safety, 
-            "safety_result": safety_result, 
-            "loading_type": loading_type
-        }
-        calculations_history.append(calculation_record)
 
 
         unique_materials.add(material)
