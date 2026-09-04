@@ -124,6 +124,11 @@ def main():
         stress_mpa = stress / 1_000_000
         print(f"Stress: {stress_mpa:.2f} MPa")
 
+        if stress_mpa > 0:
+            factor_of_safety = yield_strength / stress_mpa
+        else:
+            factor_of_safety = float('inf')
+
         if change_in_length > 0:
             print("Loading is in tension.")
         elif change_in_length < 0:
@@ -134,15 +139,15 @@ def main():
         print()
         print("=== SAFETY ANALYSIS ===")
 
-        if stress_mpa > 1.2:
-            print(f"SAFE - Factor of Safety: {stress_mpa:.2f}")
+        if factor_of_safety > 1.2:
+            print(f"SAFE - Factor of Safety: {factor_of_safety:.2f}")
 
-        elif stress_mpa >= 1.0:
-            print(f"CAUTION - Factor of Safety: {stress_mpa:.2f}")
+        elif factor_of_safety >= 1.0:
+            print(f"CAUTION - Factor of Safety: {factor_of_safety:.2f}")
             print("Stress is approaching the yield strength. Consider redesigning or using a stronger material.")
 
         else:
-            print(f"WARNING - Factor of Safety: {stress_mpa:.2f}")
+            print(f"WARNING - Factor of Safety: {factor_of_safety:.2f}")
             print("Stress exceeds the yield strength. The material is likely to fail under this load.")
 
         print()
