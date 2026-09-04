@@ -110,6 +110,9 @@ def main():
                             break
                     except ValueError:
                         print("Error: Please enter a valid number for Young's modulus.")
+                materials_database[material] = { 
+                    "yield_strength": yield_strength, 
+                    "youngs_modulus": youngs_modulus}
                 break
 
             else:
