@@ -10,15 +10,15 @@ def main():
     materials_database = {
         "Steel": {
             "yield_strength": 250, 
-            "youngs modulus": 200
+            "youngs_modulus": 200
         },
         "Aluminum": {
             "yield_strength": 95, 
-            "youngs modulus": 60
+            "youngs_modulus": 60
         },
         "Titanium": {
             "yield_strength": 880, 
-            "youngs modulus": 116
+            "youngs_modulus": 116
         }}
 
     while True:
@@ -72,20 +72,20 @@ def main():
 
             if material_choice == '1':
                 material = "Steel"
-                yield_strength = 250
-                youngs_modulus = 200
+                yield_strength = materials_database["Steel"]["yield_strength"]
+                youngs_modulus = materials_database["Steel"]["youngs_modulus"]
                 break
 
             elif material_choice == '2':
                 material = "Aluminum"
-                yield_strength = 95
-                youngs_modulus = 69
+                yield_strength = materials_database["Aluminum"]["yield_strength"]
+                youngs_modulus = materials_database["Aluminum"]["youngs_modulus"]
                 break
 
             elif material_choice == '3':
                 material = "Titanium"
-                yield_strength = 880
-                youngs_modulus = 116
+                yield_strength = materials_database["Titanium"]["yield_strength"]
+                youngs_modulus = materials_database["Titanium"]["youngs_modulus"]
                 break
 
             elif material_choice == '4':
