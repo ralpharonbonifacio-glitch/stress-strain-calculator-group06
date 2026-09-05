@@ -13,7 +13,7 @@ try:
                     determine_loading_type)  
 except ImportError:
     from material import Material
-    from .database import get_material
+    from database import get_material
     from utils import (calculate_stress, convert_stress_to_mpa,
                    calculate_strain, calculate_youngs_modulus,
                    calculate_factor_of_safety, determine_safety_result, 
