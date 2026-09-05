@@ -356,7 +356,7 @@ class TestCollection:
         """Display a summary using the collection's tests."""
         display_session_summary(self._tests)
 
-    def save_ (self, filename="test_history.json"):
+    def save_json (self, filename="test_history.json"):
         """Save test history to a JSON file."""
         path = Path(filename)
         data = [test.to_dict() for test in self._tests]
