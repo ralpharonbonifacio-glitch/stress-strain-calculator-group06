@@ -1,2 +1,0 @@
-material,force,area,original_length,change_in_length,stress,stress_mpa,strain,youngs_modulus,factor_of_safety,safety_result,loading_type
-Steel,1.0,1.0,1.0,1.0,1.0,1e-06,1.0,1e-09,250000000.0,SAFE,Loading is in tension.
