@@ -1,0 +1,17 @@
+{
+    "Steel": {
+        "density": 7850,
+        "yield_strength": 250,
+        "youngs_modulus": 200
+    },
+    "Aluminum": {
+        "density": 2700,
+        "yield_strength": 95,
+        "youngs_modulus": 70
+    },
+    "Titanium": {
+        "density": 4500,
+        "yield_strength": 880,
+        "youngs_modulus": 114
+    }
+}

@@ -1,0 +1,16 @@
+[
+    {
+        "material": "Steel",
+        "force": 1.0,
+        "area": 1.0,
+        "original_length": 1.0,
+        "change_in_length": 1.0,
+        "stress": 1.0,
+        "stress_mpa": 1e-06,
+        "strain": 1.0,
+        "youngs_modulus": 1e-09,
+        "factor_of_safety": 250000000.0,
+        "safety_result": "SAFE",
+        "loading_type": "Loading is in tension."
+    }
+]
