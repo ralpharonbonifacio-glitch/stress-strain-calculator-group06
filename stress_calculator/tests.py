@@ -237,3 +237,129 @@ def display_session_summary(calculations_history):
         print("\nNo calculations were performed.")
 
     print("\n=== Session Complete ===")
+
+class TestCollection:
+    """Manage a collection of stress-strain tests."""
+
+    def __init__(self):
+        self._tests = []
+
+    def add_test(self, test):
+        """Add a test to the collection."""
+        self._tests.append(test)
+
+    def get_tests(self):
+        """Return all tests."""
+        return self._tests.copy()
+
+    def get_test(self, index):
+        """Return a specific test."""
+        if index < 0 or index >= len(self._tests):
+            raise IndexError("Test index out of range.")
+        return self._tests[index]
+
+    def clear(self):
+        """Remove all tests."""
+        self._tests.clear()
+
+    def __len__(self):
+        """Return the number of tests."""
+        return len(self._tests)
+
+    def display_history(self):
+        """Display all tests in the collection."""
+        print("\n=== TEST HISTORY ===")
+        if not self._tests:
+            print("No tests have been performed.")
+            return
+
+        for index, test in enumerate(self._tests, start=1):
+            print(f"\nTest #{index}")
+            print(f"Timestamp: {test.timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
+            print(f"Material: {test.material.name}")
+            print(f"Stress: {test.stress_mpa:.2f} MPa")
+            print(f"Strain: {test.strain:.6f}")
+            print(f"Factor of Safety: {test.factor_of_safety:.2f}")
+            print(f"Result: {test.safety_result}")
+
+    def unique_materials(self):
+        """Return unique material names."""
+        return {test.material.name for test in self._tests}
+
+    def material_counts(self):
+        """Count how many tests use each material."""
+        counts = {}
+        for test in self._tests:
+            material_name = test.material.name
+            counts[material_name] = counts.get(material_name, 0) + 1
+        return counts
+
+    def failed_tests(self):
+        """Return tests that are likely to fail."""
+        return [test for test in self._tests if test.will_fail]
+
+    def caution_tests(self):
+        """Return tests with CAUTION result."""
+        return [test for test in self._tests if test.safety_result == "CAUTION"]
+
+    def average_strain(self):
+        """Calculate the average strain."""
+        if not self._tests:
+            return 0.0
+        return sum(test.strain for test in self._tests) / len(self._tests)
+
+    def maximum_stress(self):
+        """Return the maximum stress in MPa."""
+        if not self._tests:
+            return 0.0
+        return max(test.stress_mpa for test in self._tests)
+
+    def minimum_factor_of_safety(self):
+        """Return the lowest Factor of Safety."""
+        if not self._tests:
+            return float("inf")
+        return min(test.factor_of_safety for test in self._tests)
+
+    def display_session_summary(self):
+        """Display a summary using the collection's tests."""
+        display_session_summary(self._tests)
+
+    def save_json(self, filename="test_history.json"):
+        """Save test history to a JSON file."""
+        path = Path(filename)
+        data = [test.to_dict() for test in self._tests]
+
+        with path.open("w", encoding="utf-8") as file:
+            json.dump(data, file, indent=4)
+
+        print(f"Test history saved to: {path}")
+
+    def load_json(self, filename="test_history.json"):
+        """Load test history from a JSON file."""
+        path = Path(filename)
+        if not path.exists():
+            raise FileNotFoundError(f"File not found: {path}")
+
+        with path.open("r", encoding="utf-8") as file:
+            data = json.load(file)
+
+        self._tests.clear()
+        print(f"Loaded {len(data)} test records.")
+        self.loaded_records = data
+
+    def export_csv(self, filename="test_history.csv"):
+        """Export test history to a CSV file."""
+        path = Path(filename)
+        if not self._tests:
+            print("No test data available to export.")
+            return
+
+        data = [test.to_dict() for test in self._tests]
+        fieldnames = list(data[0].keys())
+
+        with path.open("w", newline="", encoding="utf-8") as file:
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(data)
+
+        print(f"Test data exported to: {path}")
