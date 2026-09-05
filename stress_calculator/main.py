@@ -153,3 +153,62 @@ def save_results(collection: TestCollection) -> None:
 
     collection.save_json("test_history.json")
     collection.export_csv("test_history.csv")
+
+def main() -> None:
+    """Run the main Stress and Strain Calculator."""
+
+    print("=" * 50)
+    print("     STRESS AND STRAIN CALCULATOR")
+    print("=" * 50)
+
+    try:
+        load_materials()
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f"Warning: Could not load materials: {error}")
+
+    collection = TestCollection()
+
+    while True:
+        print("\n=== MAIN MENU ===")
+        print("1. Perform Stress-Strain Calculation")
+        print("2. Generate Random Test")
+        print("3. View Test History")
+        print("4. View Session Summary")
+        print("5. Save Results")
+        print("6. Save Material Database")
+        print("7. Exit")
+
+        choice = input("\nSelect an option (1-7): ").strip()
+
+        if choice == "1":
+            perform_calculation(collection)
+
+        elif choice == "2":
+            run_random_test(collection)
+
+        elif choice == "3":
+            show_history(collection)
+
+        elif choice == "4":
+            show_summary(collection)
+
+        elif choice == "5":
+            save_results(collection)
+
+        elif choice == "6":
+            try:
+                save_materials()
+                print("Material database saved successfully.")
+            except OSError as error:
+                print(f"Error saving material database: {error}")
+
+        elif choice == "7":
+            print("\nThank you for using the Stress and Strain Calculator!")
+            break
+
+        else:
+            print("Error: Please choose a number from 1 to 7.")
+
+if __name__ == "__main__":
+    main()
+   
