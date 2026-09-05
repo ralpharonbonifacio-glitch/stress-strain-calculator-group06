@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 try:
     from .properties import MaterialProperties 
     from .material import Material, Metal, Plastic, Composite
@@ -18,6 +21,40 @@ MATERIAL_DATABASE = {
     "Titanium": TITANIUM
 }
 
+DATA_FILE = Path("materials.json")
+
+def save_materials() -> None:
+    data = {}
+
+    for name, material in MATERIAL_DATABASE.items():
+        data[name] = {
+            "density": material.properties.density,
+            "yield_strength": material.properties.yield_strength,
+            "youngs_modulus": material.properties.typical_youngs_modulus
+        }
+
+    with open(DATA_FILE, "w") as file:
+        json.dump(data, file, indent=4)
+
+
+def load_materials() -> None:
+    if not DATA_FILE.exists():
+        return
+
+    with open(DATA_FILE, "r") as file:
+        data = json.load(file)
+
+    for name, values in data.items():
+        properties = MaterialProperties(
+            density=values["density"],
+            yield_strength=values["yield_strength"],
+            typical_youngs_modulus=values["youngs_modulus"]
+        )
+
+        MATERIAL_DATABASE[name] = Material(
+            name=name,
+            properties=properties
+        )
 
 def get_all_materials() -> dict:
     """Return all materials in the database."""
