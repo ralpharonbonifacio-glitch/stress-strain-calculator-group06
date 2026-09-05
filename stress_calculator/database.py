@@ -30,3 +30,14 @@ def get_material(name: str) -> Material:
 
 def material_exists(name: str) -> bool:
     return name in MATERIAL_DATABASE
+def add_material(material: Material) -> None:
+    if material.name in MATERIAL_DATABASE:
+        raise ValueError( f"Material '{material.name}' already exists." )
+    MATERIAL_DATABASE[material.name] = material
+def remove_material(name: str) -> Material:
+    if name not in MATERIAL_DATABASE:
+        raise KeyError( f"Material '{name}' was not found." )
+    return MATERIAL_DATABASE.pop(name)
+
+
+    
