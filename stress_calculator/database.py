@@ -99,3 +99,14 @@ def display_material_database() -> None:
     for material in MATERIAL_DATABASE.values():
         print(f"\nMaterial: {material.name}") 
         material.properties.display()
+if __name__ == "__main__":
+    print("=== Database Test ===")
+    print("\nAvailable materials:")
+    for name in get_material_names(): 
+        print(f"- {name}")
+    print("\nSteel properties:") 
+    get_material("Steel").properties.display()
+    print("\nMaterial categories:")
+    categories = get_material_categories()
+    for category, materials in categories.items(): 
+        print(f"{category}: {materials}")
