@@ -35,4 +35,5 @@ class MaterialProperties:
         print(f"Young's Modulus: "
               f"{self.typical_youngs_modulus} GPa")
 
+
     
