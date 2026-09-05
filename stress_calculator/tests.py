@@ -2,6 +2,8 @@ from datetime import datetime
 from pathlib import Path
 import json
 import random
+import csv
+
 
 from material import Material
 from utils import (calculate_stress, convert_stress_to_mpa,
@@ -31,65 +33,87 @@ class StressStrainTest:
             raise ValueError("Area must be positive")
         if original_length <= 0:
             raise ValueError("Original length must be positive")
+        self._timestamp = datetime.now()
 
     @property
-    def stress(self) -> float:
+    def timestamp(self):
+        """Return the date and time when the test was recorded."""
+        return self._timestamp
+
+    @property
+    def force(self):
+        """Return applied force in Newtons."""
+        return self._force
+
+    @property
+    def area(self):
+        """Return cross-sectional area in square meters."""
+        return self._area
+
+    @property
+    def original_length(self):
+        """Return original length in meters."""
+        return self._original_length
+
+    @property
+    def change_in_length(self):
+        """Return change in length in meters."""
+        return self._change_in_length
+
+    @property
+    def stress(self):
         """Calculate stress in Pa."""
-        return self._force / self._area
+        return calculate_stress(self._force, self._area)
 
     @property
-    def stress_mpa(self) -> float:
+    def stress_mpa(self):
         """Convert stress from Pascals to Megapascals."""
-        return self.stress / 1_000_000  
+        return convert_stress_to_mpa(self.stress)
 
     @property
-    def strain(self) -> float:
+    def strain(self):
         """Calculate strain (dimensionless)."""
-        return self._change_in_length / self._original_length
+        return calculate_strain(self._change_in_length, self._original_length)
 
     @property
-    def youngs_modulus(self) -> float:
-        """Calculate actual Young's modulus in GPa based on the test parameters."""
-        if self.strain == 0:
-            return float("inf")
-        # Stress in Pa / Strain / 1e9 to get GPa
-        return (self.stress / self.strain) / 1_000_000_000
+    def youngs_modulus(self):
+        """Calculate actual Young's modulus in GPa based on test parameters."""
+        return calculate_youngs_modulus(self.stress, self.strain)
 
     @property
-    def factor_of_safety(self) -> float:
+    def factor_of_safety(self):
         """Calculate Factor of Safety (Yield Strength / Stress)."""
-        if self.stress_mpa > 0:
-            return self.material.properties.yield_strength / self.stress_mpa
-        return float("inf")
+        return calculate_factor_of_safety(
+            self.material.properties.yield_strength, self.stress_mpa
+        )
 
     @property
-    def safety_result(self) -> str:
+    def safety_result(self):
         """Return safety evaluation label based on safety factor."""
-        fos = self.factor_of_safety
-        if fos > 1.2:
-            return "SAFE"
-        elif fos >= 1.0:
-            return "CAUTION"
-        else:
-            return "WARNING"
+        return determine_safety_result(self.factor_of_safety)
 
     @property
-    def loading_type(self) -> str:
+    def loading_type(self):
         """Determine if load is tension, compression, or static."""
-        if self._change_in_length > 0:
-            return "Loading is in tension."
-        elif self._change_in_length < 0:
-            return "Loading is in compression."
-        else:
-            return "No change in length."
+        return determine_loading_type(self._change_in_length)
 
-    def will_fail(self) -> bool:
+    @property
+    def will_fail(self):
         """Determine if the material is likely to fail under this test."""
         return not self.material.can_withstand_stress(self.stress_mpa)
 
+    @classmethod
+    def generate_random_test(cls, material):
+        """Generate a randomized test instance for simulation and testing."""
+        force = random.uniform(1000.0, 50000.0)
+        area = random.uniform(0.0001, 0.005)
+        original_length = random.uniform(0.1, 1.0)
+        change_in_length = random.uniform(-0.005, 0.005)
+
+        return cls(material, force, area, original_length, change_in_length)
 
 
-def display_session_summary(calculations_history: List[StressStrainTest]):
+def display_session_summary(calculations_history):
     """Print final session summary using the history of test objects."""
     units = ("N", "m^2", "m", "Pa", "MPa", "GPa")
 
