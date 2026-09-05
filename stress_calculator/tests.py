@@ -1,3 +1,10 @@
+from datetime import datetime
+from pathlib import Path
+import json
+import random
+
+from material import Material
+
 class StressStrainTest:
     """A single stress-strain test."""
     def __init__(
@@ -76,3 +83,74 @@ class StressStrainTest:
         """Determine if the material is likely to fail under this test."""
         return not self.material.can_withstand_stress(self.stress_mpa)
 
+
+
+def display_session_summary(calculations_history: List[StressStrainTest]):
+    """Print final session summary using the history of test objects."""
+    units = ("N", "m^2", "m", "Pa", "MPa", "GPa")
+
+    print("\n" + "=" * 50)
+    print("SESSION SUMMARY")
+    print("=" * 50)
+
+    print(f"Total calculations: {len(calculations_history)}")
+
+    unique_materials = {test.material.name for test in calculations_history}
+    if unique_materials:
+        print(f"Unique materials tested: {', '.join(sorted(unique_materials))}")
+        print(f"Number of unique materials: {len(unique_materials)}")
+    else:
+        print("Unique materials tested: None")
+
+    if calculations_history:
+        print("\n=== CALCULATION HISTORY ===")
+        for i, test in enumerate(calculations_history, 1):
+            print(f"\nTest #{i}")
+            print(f"Material: {test.material.name}")
+            print(f"Force: {test._force:.2f} {units[0]}")
+            print(f"Area: {test._area:.2f} {units[1]}")
+            print(f"Original Length: {test._original_length:.2f} {units[2]}")
+            print(f"Change in Length: {test._change_in_length:.2f} {units[2]}")
+            print(f"Stress: {test.stress:.2f} {units[3]}")
+            print(f"Stress in MPa: {test.stress_mpa:.2f} {units[4]}")
+            print(f"Strain: {test.strain:.6f}")
+            
+            modulus = test.material.properties.typical_youngs_modulus if test.strain == 0 else test.youngs_modulus
+            print(f"Young's Modulus: {modulus:.2f} {units[5]}")
+            print(f"Yield Strength: {test.material.properties.yield_strength:.2f} {units[4]}")
+            print(f"Factor of Safety: {test.factor_of_safety:.2f}")
+            print(f"Safety Result: {test.safety_result}")
+            print(f"{test.loading_type}")
+
+        print("\n=== SESSION STATISTICS ===")
+        highest_stress_test = max(calculations_history, key=lambda t: t.stress)
+        highest_stress_test_in_mpa = max(calculations_history, key=lambda t: t.stress_mpa)
+        lowest_safety_test = min(calculations_history, key=lambda t: t.factor_of_safety)
+        average_strain = sum(t.strain for t in calculations_history) / len(calculations_history)
+
+        print(f"Highest stress: {highest_stress_test.stress:.2f} Pa ({highest_stress_test.material.name})")
+        print(f"Highest stress in MPa: {highest_stress_test.stress_mpa:.2f} MPa ({highest_stress_test_in_mpa.material.name})")
+        print(f"Lowest factor of safety: {lowest_safety_test.factor_of_safety:.2f} ({lowest_safety_test.material.name})")
+        print(f"Average strain: {average_strain:.6f}")
+
+        material_counts = {}
+        for test in calculations_history:
+            mat = test.material.name
+            material_counts[mat] = material_counts.get(mat, 0) + 1
+
+        print("\nMaterial test counts:")
+        for mat, count in material_counts.items():
+            print(f"- {mat}: {count}")
+
+        failed_tests = [(i, t) for i, t in enumerate(calculations_history, 1) if t.safety_result != "SAFE"]
+
+        print("\nMaterials that failed or require caution:")
+        if failed_tests:
+            for i, test in failed_tests:
+                print(f"- {test.material.name} (Test #{i}): {test.safety_result}")
+        else:
+            print("None")
+    else:
+        print("\nNo calculations were performed.")
+
+    print("\n=== Session Complete ===")
