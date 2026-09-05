@@ -17,3 +17,20 @@ def calculate_youngs_modulus(stress_pa: float, strain: float) -> float:
     if strain == 0:
         return float("inf")
     return (stress_pa / strain) / 1_000_000_000
+
+def calculate_factor_of_safety(yield_strength_mpa: float,stress_mpa: float) -> float:
+
+    if stress_mpa > 0:
+         return yield_strength_mpa / stress_mpa
+
+    return float("inf")
+
+def determine_safety_result(factor_of_safety: float) -> str:
+
+    if factor_of_safety > 1.2:
+        return "SAFE"
+    elif factor_of_safety >= 1.0:
+        return "CAUTION"
+    else:
+        return "WARNING"
+
