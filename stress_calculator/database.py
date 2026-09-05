@@ -3,22 +3,15 @@ from pathlib import Path
 
 try:
     from .properties import MaterialProperties 
-    from .material import Material, Metal, Plastic, Composite
+    from .material import Material, Metal, Plastic, Composite, create_steel, create_aluminum, create_titanium, create_custom_material
 except ImportError:
     from properties import MaterialProperties
-    from material import Material, Metal, Plastic, Composite
-
-STEEL_PROPERTIES = MaterialProperties( density=7850, yield_strength=250, typical_youngs_modulus=200 )
-ALUMINUM_PROPERTIES = MaterialProperties( density=2700, yield_strength=95, typical_youngs_modulus=69 )
-TITANIUM_PROPERTIES = MaterialProperties( density=4500, yield_strength=880, typical_youngs_modulus=114 )
-STEEL = Metal( name="Steel", properties=STEEL_PROPERTIES )
-ALUMINUM = Metal( name="Aluminum", properties=ALUMINUM_PROPERTIES )
-TITANIUM = Metal( name="Titanium", properties=TITANIUM_PROPERTIES )
+    from material import Material, Metal, Plastic, Composite, create_steel, create_aluminum, create_titanium, create_custom_material
 
 MATERIAL_DATABASE = {
-    "Steel": STEEL, 
-    "Aluminum": ALUMINUM, 
-    "Titanium": TITANIUM
+    "Steel": create_steel(), 
+    "Aluminum": create_aluminum(), 
+    "Titanium": create_titanium()
 }
 
 DATA_FILE = Path("materials.json")
@@ -118,16 +111,11 @@ def create_and_add_custom_material(
 ) -> Material:
 
     if material_exists(name):
-        raise ValueError( f"Material '{name}' already exists." )
-    properties = MaterialProperties( 
-        density=density, 
-        yield_strength=yield_strength, 
-        typical_youngs_modulus=youngs_modulus)
-    material = Material( 
-        name=name, 
-        properties=properties)
+        raise ValueError(f"Material '{name}' already exists.")
+    material = create_custom_material(name, yield_strength, youngs_modulus, density)
     add_material(material)
     return material
+    
 def display_material_database() -> None:
     print("\n=== MATERIAL DATABASE ===")
     if not MATERIAL_DATABASE:
@@ -136,6 +124,7 @@ def display_material_database() -> None:
     for material in MATERIAL_DATABASE.values():
         print(f"\nMaterial: {material.name}") 
         material.properties.display()
+        
 if __name__ == "__main__":
     print("=== Database Test ===")
     print("\nAvailable materials:")
