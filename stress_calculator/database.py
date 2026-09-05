@@ -59,3 +59,36 @@ def get_material_categories() -> dict:
                 for name, 
                 material in MATERIAL_DATABASE.items() 
                 if isinstance(material, Composite) ] }
+
+def get_materials_by_category(category: str) -> list[Material]:
+    category = category.lower()
+    if category == "metal": 
+        material_class = Metal
+    elif category == "plastic": 
+        material_class = Plastic
+    elif category == "composite":
+        material_class = Composite
+    else:
+        raise ValueError( "Invalid category. " "Choose Metal, Plastic, or Composite." )
+    return [material for material in MATERIAL_DATABASE.values() 
+            if isinstance(material, material_class)]
+
+def create_and_add_custom_material(
+        name: str, 
+        yield_strength: float, 
+        youngs_modulus: float, 
+        density: float = 1.0
+) -> Material:
+
+    if material_exists(name):
+        raise ValueError( f"Material '{name}' already exists." )
+    properties = MaterialProperties( 
+        density=density, 
+        yield_strength=yield_strength, 
+        typical_youngs_modulus=youngs_modulus)
+    material = Material( 
+        name=name, 
+        properties=properties)
+    add_material(material)
+    return material
+    
