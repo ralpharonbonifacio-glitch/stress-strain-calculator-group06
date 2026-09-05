@@ -189,6 +189,7 @@ def display_session_summary(calculations_history):
         print("\n=== CALCULATION HISTORY ===")
         for i, test in enumerate(calculations_history, 1):
             print(f"\nTest #{i}")
+            print(f"Timestamp: {test.timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
             print(f"Material: {test.material.name}")
             print(f"Force: {test._force:.2f} {units[0]}")
             print(f"Area: {test._area:.2f} {units[1]}")
@@ -197,23 +198,41 @@ def display_session_summary(calculations_history):
             print(f"Stress: {test.stress:.2f} {units[3]}")
             print(f"Stress in MPa: {test.stress_mpa:.2f} {units[4]}")
             print(f"Strain: {test.strain:.6f}")
-            
-            modulus = test.material.properties.typical_youngs_modulus if test.strain == 0 else test.youngs_modulus
+
+            modulus = (
+                test.material.properties.typical_youngs_modulus
+                if test.strain == 0
+                else test.youngs_modulus
+            )
             print(f"Young's Modulus: {modulus:.2f} {units[5]}")
-            print(f"Yield Strength: {test.material.properties.yield_strength:.2f} {units[4]}")
+            print(
+                f"Yield Strength: {test.material.properties.yield_strength:.2f} {units[4]}"
+            )
             print(f"Factor of Safety: {test.factor_of_safety:.2f}")
             print(f"Safety Result: {test.safety_result}")
             print(f"{test.loading_type}")
 
         print("\n=== SESSION STATISTICS ===")
         highest_stress_test = max(calculations_history, key=lambda t: t.stress)
-        highest_stress_test_in_mpa = max(calculations_history, key=lambda t: t.stress_mpa)
-        lowest_safety_test = min(calculations_history, key=lambda t: t.factor_of_safety)
-        average_strain = sum(t.strain for t in calculations_history) / len(calculations_history)
+        highest_stress_test_in_mpa = max(
+            calculations_history, key=lambda t: t.stress_mpa
+        )
+        lowest_safety_test = min(
+            calculations_history, key=lambda t: t.factor_of_safety
+        )
+        average_strain = sum(t.strain for t in calculations_history) / len(
+            calculations_history
+        )
 
-        print(f"Highest stress: {highest_stress_test.stress:.2f} Pa ({highest_stress_test.material.name})")
-        print(f"Highest stress in MPa: {highest_stress_test.stress_mpa:.2f} MPa ({highest_stress_test_in_mpa.material.name})")
-        print(f"Lowest factor of safety: {lowest_safety_test.factor_of_safety:.2f} ({lowest_safety_test.material.name})")
+        print(
+            f"Highest stress: {highest_stress_test.stress:.2f} Pa ({highest_stress_test.material.name})"
+        )
+        print(
+            f"Highest stress in MPa: {highest_stress_test_in_mpa.stress_mpa:.2f} MPa ({highest_stress_test_in_mpa.material.name})"
+        )
+        print(
+            f"Lowest factor of safety: {lowest_safety_test.factor_of_safety:.2f} ({lowest_safety_test.material.name})"
+        )
         print(f"Average strain: {average_strain:.6f}")
 
         material_counts = {}
@@ -225,7 +244,11 @@ def display_session_summary(calculations_history):
         for mat, count in material_counts.items():
             print(f"- {mat}: {count}")
 
-        failed_tests = [(i, t) for i, t in enumerate(calculations_history, 1) if t.safety_result != "SAFE"]
+        failed_tests = [
+            (i, t)
+            for i, t in enumerate(calculations_history, 1)
+            if t.safety_result != "SAFE"
+        ]
 
         print("\nMaterials that failed or require caution:")
         if failed_tests:
@@ -324,7 +347,7 @@ class TestCollection:
         """Display a summary using the collection's tests."""
         display_session_summary(self._tests)
 
-    def save_json(self, filename="test_history.json"):
+    def save_ (self, filename="test_history.json"):
         """Save test history to a JSON file."""
         path = Path(filename)
         data = [test.to_dict() for test in self._tests]
