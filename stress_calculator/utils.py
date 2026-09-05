@@ -34,3 +34,18 @@ def determine_safety_result(factor_of_safety: float) -> str:
     else:
         return "WARNING"
 
+def validate_force(force: float) -> None:
+
+    if force < 0:
+        raise ValueError("Force cannot be negative")
+
+def validate_area(area: float) -> None:
+
+    if area <= 0:
+        raise ValueError("Area must be positive")
+
+def validate_original_length(original_length: float) -> None:
+
+    if original_length <= 0:
+        raise ValueError("Original length must be positive")
+
