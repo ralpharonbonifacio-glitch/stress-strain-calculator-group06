@@ -6,18 +6,18 @@ import csv
 
 try:
     from .material import Material
+    from .database import get_material
     from .utils import (calculate_stress, convert_stress_to_mpa,
                     calculate_strain, calculate_youngs_modulus,
                     calculate_factor_of_safety, determine_safety_result, 
                     determine_loading_type)  
 except ImportError:
     from material import Material
+    from .database import get_material
     from utils import (calculate_stress, convert_stress_to_mpa,
                    calculate_strain, calculate_youngs_modulus,
                    calculate_factor_of_safety, determine_safety_result, 
                    determine_loading_type)
-    
-
 
 
 class StressStrainTest:
@@ -368,7 +368,9 @@ class TestCollection:
 
     def load_json(self, filename="test_history.json"):
         """Load test history from a JSON file."""
+
         path = Path(filename)
+
         if not path.exists():
             raise FileNotFoundError(f"File not found: {path}")
 
@@ -376,8 +378,21 @@ class TestCollection:
             data = json.load(file)
 
         self._tests.clear()
-        print(f"Loaded {len(data)} test records.")
-        self.loaded_records = data
+
+        for record in data:
+            material = get_material(record["material"])
+
+            test = StressStrainTest(
+                material=material,
+                force=record["force"],
+                area=record["area"],
+                original_length=record["original_length"],
+                change_in_length=record["change_in_length"]
+            )
+
+            self._tests.append(test)
+
+        print(f"Loaded {len(self._tests)} test records.")
 
     def export_csv(self, filename="test_history.csv"):
         """Export test history to a CSV file."""
