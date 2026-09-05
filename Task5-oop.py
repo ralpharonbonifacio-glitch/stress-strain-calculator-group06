@@ -5,12 +5,12 @@ from typing import List
 class MaterialProperties:
     """Properties of a material."""
     density: float # kg/m^3
-    yield_stength = float #MPa
+    yield_strength: float #MPa
     typical_youngs_modulus: float #GPa
 
     def __post_init__(self):
         """Validate properties."""
-        if self.density <- 0:
+        if self.density <= 0:
             raise ValueError("Density must be positive")
         if self.yield_strength <= 0:
             raise ValueError("Yield strength must be positive")
@@ -231,7 +231,7 @@ def display_session_summary(calculations_history: List[StressStrainTest]):
             print(f"Original Length: {test._original_length:.2f} {units[2]}")
             print(f"Change in Length: {test._change_in_length:.2f} {units[2]}")
             print(f"Stress: {test.stress:.2f} {units[3]}")
-            print(f"Stress: {test.stress_mpa:.2f} {units[4]}")
+            print(f"Stress in MPa: {test.stress_mpa:.2f} {units[4]}")
             print(f"Strain: {test.strain:.6f}")
             
             modulus = test.material.properties.typical_youngs_modulus if test.strain == 0 else test.youngs_modulus
@@ -242,11 +242,13 @@ def display_session_summary(calculations_history: List[StressStrainTest]):
             print(f"{test.loading_type}")
 
         print("\n=== SESSION STATISTICS ===")
-        highest_stress_test = max(calculations_history, key=lambda t: t.stress_mpa)
+        highest_stress_test = max(calculations_history, key=lambda t: t.stress)
+        highest_stress_test_in_mpa = max(calculations_history, key=lambda t: t.stress_mpa)
         lowest_safety_test = min(calculations_history, key=lambda t: t.factor_of_safety)
         average_strain = sum(t.strain for t in calculations_history) / len(calculations_history)
 
-        print(f"Highest stress: {highest_stress_test.stress_mpa:.2f} MPa ({highest_stress_test.material.name})")
+        print(f"Highest stress: {highest_stress_test.stress:.2f} Pa ({highest_stress_test.material.name})")
+        print(f"Highest stress in MPa: {highest_stress_test.stress_mpa:.2f} MPa ({highest_stress_test_in_mpa.material.name})")
         print(f"Lowest factor of safety: {lowest_safety_test.factor_of_safety:.2f} ({lowest_safety_test.material.name})")
         print(f"Average strain: {average_strain:.6f}")
 
@@ -279,15 +281,15 @@ def display_results(test: StressStrainTest):
 
     print("\n=== RESULTS ===")
     print(f"Stress: {test.stress:.2f} {units[3]}")
+    print(f"Stress in MPa: {test.stress_mpa:.2f} {units[4]}")
     print(f"Strain: {test.strain:.6f}")
-    print(f"Stress: {test.stress_mpa:.2f} {units[4]}")
 
     display_modulus = test.material.properties.typical_youngs_modulus if test.strain == 0 else test.youngs_modulus
     print(f"Young's Modulus: {display_modulus:.2f} {units[5]}")
     print()
-    print(f"\n{test.loading_type}")
+    print(f"{test.loading_type}")
 
-    print("=== SAFETY ANALYSIS===")
+    print("\n=== SAFETY ANALYSIS===")
     if test.safety_result == "SAFE":
         print(f"SAFE - Factor of Safety: {test.factor_of_safety:.2f}")
     elif test.safety_result == "CAUTION":
@@ -303,7 +305,7 @@ def display_results(test: StressStrainTest):
             "The material is likely to fail under this load."
         )
         
-    print("=== ANALYSIS COMPLETE ===")
+    print("\n=== ANALYSIS COMPLETE ===")
 
 def main():
     """Main function for the stress and strain calculator."""
