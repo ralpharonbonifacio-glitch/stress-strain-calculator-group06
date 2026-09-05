@@ -110,53 +110,6 @@ class StressStrainTest:
         """Determine if the material is likely to fail under this test."""
         return not self.material.can_withstand_stress(self.stress_mpa)
     
-def calculate_stress(force, area):
-    """Calculate stress (Force / Area)."""  
-    return force / area
-
-def calculate_strain(original_length, change_in_length):
-    """Calculate strain (ΔL / L)."""
-    return change_in_length / original_length
-
-def calculate_youngs_modulus(stress, strain):
-    """Calculate Young's Modulus (Stress / Strain)."""
-    if strain == 0:
-        return float("inf") 
-    return stress / strain
-
-def calculate_stress_mpa(stress):
-    """Convert stress from Pascals to Megapascals."""
-    return stress / 1000000
-
-def calculate_factor_of_safety(yield_strength, stress_mpa):
-    """Calculate Factor of Safety (Yield Strength / Stress)."""
-    if stress_mpa > 0:
-        factor_of_safety = yield_strength / stress_mpa
-    else:
-        factor_of_safety = float("inf")
-
-    return factor_of_safety
-
-def safety_result(factor_of_safety):
-    """Return safety evaluation label based on safety factor."""
-    if factor_of_safety > 1.2:
-        safety_result = "SAFE"
-    elif factor_of_safety >= 1.0:
-        safety_result = "CAUTION"
-    else:
-        safety_result = "WARNING"
-
-    return safety_result
-
-def loading_type(change_in_length):
-    """Determine if load is tension, compression, or static."""
-    if change_in_length > 0: 
-        return "Loading is in tension." 
-    elif change_in_length < 0: 
-        return "Loading is in compression." 
-    else: 
-        return "No change in length."
-
 def material_management() -> Material:
     """Prompt user to select a preset or custom material."""
     presets = {
@@ -358,45 +311,22 @@ def main():
     print("=== Stress and Strain Calculator ===")
     print()
 
-    calculations_history = []
-    unique_materials = set()
-    units = ("N", "m^2", "m", "Pa", "MPa", "GPa")
+    calculations_history: List[StressStrainTest] = []
 
     while True:
 
-        force, area, original_length, change_in_length, material, yield_strength, preset_modulus = validate_input()
-        stress = calculate_stress(force, area)
-        strain = calculate_strain(original_length, change_in_length)
-        stress_mpa = calculate_stress_mpa(stress)
-        if preset_modulus is None:
-            youngs_modulus_pa = calculate_youngs_modulus(stress, strain)
-            youngs_modulus = youngs_modulus_pa / 1e9 if youngs_modulus_pa != float("inf") else float("inf")
-        else:
-            youngs_modulus = preset_modulus 
-        factor_of_safety = calculate_factor_of_safety(yield_strength, stress_mpa)
-        safety_val = safety_result(factor_of_safety)
-        loading_val= loading_type(change_in_length)
-
-        record_calculation(
-                calculations_history,
-                material=material,
-                force=force,
-                area=area,
-                original_length=original_length,
-                change_in_length=change_in_length,
-                stress=stress,
-                stress_mpa=stress_mpa,
-                strain=strain,
-                youngs_modulus=youngs_modulus,
-                yield_strength=yield_strength,
-                factor_of_safety=factor_of_safety,
-                safety_val=safety_val,
-                loading_val=loading_val,
+        force, area, original_length, change_in_length, material = validate_input()
+        current_test = StressStrainTest(
+            material=material,
+            force=force,
+            area=area,
+            original_length=original_length,
+            change_in_length=change_in_length
         )
-        unique_materials.add(material)
+        
+        calculations_history.append(current_test)
 
-        display_results(stress, strain, youngs_modulus, units, stress_mpa, factor_of_safety, safety_val, loading_val)
-
+        display_results(current_test)
 
         while True:
             repeat = input("Would you like to perform another calculation? (y/n): ").strip().lower()
@@ -411,8 +341,7 @@ def main():
 
             break
 
-    record_calculation(calculations_history, unique_materials=unique_materials, units=units, summary=True)
-
+    display_session_summary(calculations_history)
 
 if __name__ == "__main__":
     main()
