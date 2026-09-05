@@ -11,3 +11,11 @@ TITANIUM_PROPERTIES = MaterialProperties( density=4500, yield_strength=880, typi
 STEEL = Metal( name="Steel", properties=STEEL_PROPERTIES )
 ALUMINUM = Metal( name="Aluminum", properties=ALUMINUM_PROPERTIES )
 TITANIUM = Metal( name="Titanium", properties=TITANIUM_PROPERTIES )
+
+MATERIAL_DATABASE = {
+    "Steel": STEEL, 
+    "Aluminum": ALUMINUM, 
+    "Titanium": TITANIUM
+}
+
+
