@@ -98,3 +98,28 @@ def create_titanium() -> Material:
         name="Titanium",
         properties=properties
     )
+
+
+def create_custom_material(
+    name: str,
+    yield_strength: float,
+    youngs_modulus: float,
+    density: float = 1.0
+) -> Material:
+    """
+    Create a custom material.
+
+    Density defaults to 1.0 because the original Task 5
+    program did not ask the user for density.
+    """
+
+    properties = MaterialProperties(
+        density=density,
+        yield_strength=yield_strength,
+        typical_youngs_modulus=youngs_modulus
+    )
+
+    return Material(
+        name=name,
+        properties=properties
+    )
