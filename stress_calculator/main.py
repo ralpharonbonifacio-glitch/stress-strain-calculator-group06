@@ -154,6 +154,16 @@ def save_results(collection: TestCollection) -> None:
     collection.save_json("test_history.json")
     collection.export_csv("test_history.csv")
 
+def load_results(collection: TestCollection) -> None:
+    """Load saved test results from a JSON file."""
+
+    try:
+        collection.load_json("test_history.json")
+        print("\nTest results loaded successfully.")
+
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f"Error loading test results: {error}")
+
 def main() -> None:
     """Run the main Stress and Strain Calculator."""
 
@@ -175,8 +185,9 @@ def main() -> None:
         print("3. View Test History")
         print("4. View Session Summary")
         print("5. Save Results")
-        print("6. Save Material Database")
-        print("7. Exit")
+        print("6. Load Results")
+        print("7. Save Material Database")
+        print("8. Exit")
 
         choice = input("\nSelect an option (1-7): ").strip()
 
@@ -196,18 +207,21 @@ def main() -> None:
             save_results(collection)
 
         elif choice == "6":
+            load_results(collection)
+
+        elif choice == "7":
             try:
                 save_materials()
                 print("Material database saved successfully.")
             except OSError as error:
                 print(f"Error saving material database: {error}")
 
-        elif choice == "7":
+        elif choice == "8":
             print("\nThank you for using the Stress and Strain Calculator!")
             break
 
         else:
-            print("Error: Please choose a number from 1 to 7.")
+            print("Error: Please choose a number from 1 to 8.")
 
 if __name__ == "__main__":
     main()
