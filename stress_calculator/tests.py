@@ -112,6 +112,61 @@ class StressStrainTest:
 
         return cls(material, force, area, original_length, change_in_length)
 
+    def display_results(self) -> None:
+        """Print formatted calculation results to the console."""
+        display_results(self)
+
+    def to_dict(self) -> dict:
+        """Return the test results as a dictionary."""
+        modulus = self.material.properties.typical_youngs_modulus if self.strain == 0 else self.youngs_modulus
+        return {
+            "material": self.material.name,
+            "force": self._force,
+            "area": self._area,
+            "original_length": self._original_length,
+            "change_in_length": self._change_in_length,
+            "stress": self.stress,
+            "stress_mpa": self.stress_mpa,
+            "strain": self.strain,
+            "youngs_modulus": self.youngs_modulus,
+            "factor_of_safety": self.factor_of_safety,
+            "safety_result": self.safety_result,
+            "loading_type": self.loading_type
+        }
+
+def display_results(test: StressStrainTest):
+    """Print formatted calculation results to the console."""
+
+    units = ("N", "m^2", "m", "Pa", "MPa", "GPa")
+
+    print("\n=== RESULTS ===")
+    print(f"Stress: {test.stress:.2f} {units[3]}")
+    print(f"Stress in MPa: {test.stress_mpa:.2f} {units[4]}")
+    print(f"Strain: {test.strain:.6f}")
+
+    display_modulus = test.material.properties.typical_youngs_modulus if test.strain == 0 else test.youngs_modulus
+    print(f"Young's Modulus: {display_modulus:.2f} {units[5]}")
+    print()
+    print(f"{test.loading_type}")
+
+    print("\n=== SAFETY ANALYSIS===")
+    if test.safety_result == "SAFE":
+        print(f"SAFE - Factor of Safety: {test.factor_of_safety:.2f}")
+    elif test.safety_result == "CAUTION":
+        print(f"CAUTION - Factor of Safety: {test.factor_of_safety:.2f}")
+        print(
+            "Stress is approaching the yield strength. "
+            "Consider redesigning or using a stronger material."
+        )
+    else:
+        print(f"WARNING - Factor of Safety: {test.factor_of_safety:.2f}")
+        print(
+            "Stress exceeds the yield strength. "
+            "The material is likely to fail under this load."
+        )
+        
+    print("\n=== ANALYSIS COMPLETE ===")
+
 
 def display_session_summary(calculations_history):
     """Print final session summary using the history of test objects."""
