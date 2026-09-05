@@ -1,21 +1,17 @@
 **Stress and Strain Analysis System**
 
 **Group Members**
-Member	                  Primary Responsibility
-BONIFACIO, Ralph Aron	    Task 1 – Basic Calculations
-DELA CRUZ, Andrei Karl    Task 2 – Control Structures
-FRANCO, Eivrard Seraphim	Task 3 – Data Structures
-MEDALLON, Matthew Zachary	Task 4 – Functions
-NEPOMUCENO, Josef Jaden	  Task 5 – OOP
+Member	                      Primary Responsibility
+1. DELA CRUZ, Andrei Karl	    Task 1 – Basic Calculations
+2. BONIFACIO, Ralph Aron      Task 2 – Control Structures
+3. FRANCO, Eivrard Seraphim	  Task 3 – Data Structures
+4. NEPOMUCENO, Josef Jaden    Task 4 - Functions and Parameters
+5. MEDALLON, Matthew Zachary  Task 5 – OOP
 
 _Task 6 – Modular Integration was completed collaboratively by all members._
 
 **Project Description**
-The Stress and Strain Analysis System is a comprehensive, object-oriented Python application designed to calculate and 
-evaluate the mechanical properties of various materials under load. Developed incrementally, the project evolved from 
-a basic mathematical calculator into a robust, modular system capable of handling complex data structures, validating 
-safety parameters, managing session histories, and saving/exporting test data. It serves as a tool for analyzing how 
-materials like metals, plastics, and composites behave under applied forces.
+The Stress and Strain Analysis System is a comprehensive, object-oriented Python application designed to calculate and evaluate the mechanical properties of various materials under load. Developed incrementally, the project evolved from a basic mathematical calculator into a robust, modular system capable of handling complex data structures, validating safety parameters, managing session histories, and saving/exporting test data. It serves as a tool for analyzing how materials like metals, plastics, and composites behave under applied forces.
 
 **Program Features**
 - Core Calculations: Computes stress (σ), strain (ε), Young's Modulus, and Factor of Safety based on user inputs (force, cross-sectional area, original length, and change in length).
@@ -27,8 +23,8 @@ materials like metals, plastics, and composites behave under applied forces.
 
 **Installation/Requirements**
 This program relies entirely on the Python Standard Library. No external packages (like pip installs) are required.
-Python Version: Python 3.7 or higher is required (for dataclasses and standard path management).
-Standard Modules Used: json, csv, datetime, pathlib, os, and random.
+- Python Version: Python 3.7 or higher is required (for dataclasses and standard path management).
+- Standard Modules Used: json, csv, datetime, pathlib, os, and random.
 
 **How to Run the Program**
 To start the application, navigate to the root directory of the project in your terminal or command prompt and execute the main script:
@@ -38,9 +34,9 @@ python main.py
 
 **Repository Structure**
 The application follows a modular file structure to separate different system responsibilities:
-main.py: The main entry point of the program. It provides the user interface/menu, handles user interactions, and coordinates the flow of data between all other modules.
-material.py: Contains the core Object-Oriented Material class hierarchy, including specialized subclasses for Metal, Plastic, and Composite.
-properties.py: Manages the data-oriented material properties and utilizes Python dataclasses to efficiently structure property data.
-tests.py: Contains the classes that model individual stress-strain tests (e.g., StressStrainTest), as well as collections to manage multiple tests within a session.
-utils.py: A library of reusable helper functions, including the core math functions (stress, strain, Young's modulus, factor of safety) and input validation routines.
-database.py: Manages the system's predefined materials, handling the storage, retrieval, loading (JSON), and exporting (CSV) of test data and material profiles.
+- main.py: The main entry point of the program. It provides the user interface/menu, handles user interactions, and coordinates the flow of data between all other modules.
+- material.py: Contains the core Object-Oriented Material class hierarchy, including specialized subclasses for Metal, Plastic, and Composite.
+- properties.py: Manages the data-oriented material properties and utilizes Python dataclasses to efficiently structure property data.
+- tests.py: Contains the classes that model individual stress-strain tests (e.g., StressStrainTest), as well as collections to manage multiple tests within a session.
+- utils.py: A library of reusable helper functions, including the core math functions (stress, strain, Young's modulus, factor of safety) and input validation routines.
+- database.py: Manages the system's predefined materials, handling the storage, retrieval, loading (JSON), and exporting (CSV) of test data and material profiles.
