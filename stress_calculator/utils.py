@@ -49,3 +49,14 @@ def validate_original_length(original_length: float) -> None:
     if original_length <= 0:
         raise ValueError("Original length must be positive")
 
+def determine_loading_type(change_in_length: float) -> str:
+
+    if change_in_length > 0:
+        return "Loading is in tension."
+    elif change_in_length < 0:
+        return "Loading is in compression."
+    else:
+        return "No change in length."
+
+def validate_change_in_length(change_in_length: float) -> None:
+    return None
