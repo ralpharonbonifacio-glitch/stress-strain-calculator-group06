@@ -28,7 +28,6 @@ _Task 6 – Modular Integration was completed collaboratively by all members._
 **How to Run the Program**
 To start the application, navigate to the root directory of the project in your terminal or command prompt and execute the main script:
 
-Bash
 python main.py
 
 **Repository Structure**
