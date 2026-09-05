@@ -72,3 +72,63 @@ def select_material():
 
         except ValueError:
             print("Error: Please enter a valid number.")
+
+def perform_calculation(collection: TestCollection) -> None:
+    """Perform one stress-strain calculation."""
+
+    material = select_material()
+
+    print("\n=== ENTER TEST DATA ===")
+
+    force = get_number(
+        "Enter force (N): ",
+        minimum=0
+    )
+
+    area = get_number(
+        "Enter cross-sectional area (m^2): ",
+        minimum=0.0000000001
+    )
+
+    original_length = get_number(
+        "Enter original length (m): ",
+        minimum=0.0000000001
+    )
+
+    change_in_length = get_number(
+        "Enter change in length (m): ",
+        minimum=-float("inf")
+    )
+
+    try:
+        test = StressStrainTest(
+            material=material,
+            force=force,
+            area=area,
+            original_length=original_length,
+            change_in_length=change_in_length
+        )
+
+        collection.add_test(test)
+
+        test.display_results()
+
+    except ValueError as error:
+        print(f"Error: {error}")
+
+
+def run_random_test(collection: TestCollection) -> None:
+    """Generate and run a random stress-strain test."""
+
+    material = select_material()
+
+    try:
+        test = StressStrainTest.generate_random_test(material)
+
+        collection.add_test(test)
+
+        print("\n=== RANDOM TEST GENERATED ===")
+        test.display_results()
+
+    except ValueError as error:
+        print(f"Error: {error}")
