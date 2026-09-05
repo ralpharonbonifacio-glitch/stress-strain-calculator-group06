@@ -123,3 +123,83 @@ def create_custom_material(
         name=name,
         properties=properties
     )
+
+def material_management() -> Material:
+    """Prompt the user to select a preset or custom material."""
+
+    presets = {
+        "1": create_steel(),
+        "2": create_aluminum(),
+        "3": create_titanium()
+    }
+
+    while True:
+        print("\n=== Material Properties ===")
+        print("1. Steel")
+        print("2. Aluminum")
+        print("3. Titanium")
+        print("4. Custom Material")
+
+        material_choice = input("Select a material (1-4): ").strip()
+
+        if material_choice in presets:
+            return presets[material_choice]
+
+        elif material_choice == "4":
+            name = input("Enter custom material name: ").strip()
+
+            while not name:
+                print("Error: Material name cannot be empty.")
+                name = input("Enter custom material name: ").strip()
+
+            while True:
+                try:
+                    yield_strength = float(
+                        input("Enter yield strength (MPa): ")
+                    )
+
+                    if yield_strength <= 0:
+                        print(
+                            "Error: Yield strength must be "
+                            "greater than zero."
+                        )
+                    else:
+                        break
+
+                except ValueError:
+                    print(
+                        "Error: Please enter a valid number "
+                        "for yield strength."
+                    )
+
+            while True:
+                try:
+                    modulus = float(
+                        input("Enter expected Young's modulus (GPa): ")
+                    )
+
+                    if modulus <= 0:
+                        print(
+                            "Error: Young's modulus must be "
+                            "greater than zero."
+                        )
+                    else:
+                        break
+
+                except ValueError:
+                    print(
+                        "Error: Please enter a valid number "
+                        "for Young's modulus."
+                    )
+
+            return create_custom_material(
+                name=name,
+                yield_strength=yield_strength,
+                youngs_modulus=modulus
+            )
+
+        else:
+            print(
+                "Error: Invalid selection. "
+                "Please choose a number between 1 and 4."
+            )
