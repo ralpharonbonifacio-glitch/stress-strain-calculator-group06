@@ -4,6 +4,10 @@ import json
 import random
 
 from material import Material
+from utils import (calculate_stress, convert_stress_to_mpa,
+                   calculate_strain, calculate_youngs_modulus,
+                   calculate_factor_of_safety, determine_safety_result, 
+                   determine_loading_type)
 
 class StressStrainTest:
     """A single stress-strain test."""
