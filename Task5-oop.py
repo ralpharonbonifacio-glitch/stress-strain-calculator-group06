@@ -77,107 +77,99 @@ def loading_type(change_in_length):
     else: 
         return "No change in length."
 
-def validate_input():
-    """Prompt user and validate numeric inputs."""    
+def material_management() -> Material:
+    """Prompt user to select a preset or custom material."""
+    presets = {
+        "Steel": Material("Steel", MaterialProperties(density=7850, yield_strength=250, typical_youngs_modulus=200)),
+        "Aluminum": Material("Aluminum", MaterialProperties(density=2700, yield_strength=95, typical_youngs_modulus=69)),
+        "Titanium": Material("Titanium", MaterialProperties(density=4500, yield_strength=880, typical_youngs_modulus=114))
+    }
+    
     while True:
-            try:
-                force = float(input("Enter applied force (N): "))
-                if force < 0:
-                    print("Error: Force cannot be negative.")
-                else:
-                    break
-            except ValueError:
-                print("Error: Please enter a valid number for force.")
+        print("\n===Material Properties===")
+        print("1. Steel")
+        print("2. Aluminum")
+        print("3. Titanium")
+        print("4. Custom Material")
 
-    while True:
-            try:
-                area = float(input("Enter cross-sectional area (m^2): "))
-                if area <= 0:
-                    print("Error: Area must be greater than zero.")
-                else:
-                    break
-            except ValueError:
-                print("Error: Please enter a valid number for area.")
+        material_choice = input("Select a material (1-4): ")
 
-    while True:
-            try:
-                original_length = float(input("Enter original length (m): "))
-                if original_length <= 0:
-                    print("Error: Original length must be greater than zero.")
-                else:
-                    break
-            except ValueError:
-                print("Error: Please enter a valid number for original length.")
-
-    while True:
-            try:
-                change_in_length = float(input("Enter change in length (m): "))
-                break
-            except ValueError:
-                print("Error: Please enter a valid number for change in length.")
-
-    material, yield_strength, youngs_modulus = material_management()
-    if yield_strength is None:
+        if material_choice == '1':
+            return presets["Steel"]
+        elif material_choice == '2':
+            return presets["Aluminum"]
+        elif material_choice == '3':
+            return presets["Titanium"]
+        elif material_choice == '4':
+            name = input("Enter custom material name: ").strip()
+            
             while True:
                 try:
-                    temp_yield = float(input("Enter yield strength (MPa): "))
-                    if temp_yield <= 0:
+                    yield_strength = float(input("Enter yield strength (MPa): "))
+                    if yield_strength <= 0:
                         print("Error: Yield strength must be greater than zero.")
                     else:
-                        yield_strength = temp_yield
                         break
                 except ValueError:
                     print("Error: Please enter a valid number for yield strength.")
+            
+            while True:
+                try:
+                    modulus = float(input("Enter expected Young's modulus (GPa): "))
+                    if modulus <= 0:
+                        print("Error: Young's modulus must be greater than zero.")
+                    else:
+                        break
+                except ValueError:
+                    print("Error: Please enter a valid number for Young's modulus.")
+            
+            # Density is required by the base class, using 1.0 as a placeholder if not asking the user for it
+            custom_props = MaterialProperties(density=1.0, yield_strength=yield_strength, typical_youngs_modulus=modulus)
+            return Material(name, custom_props)
+        else:
+            print("Error: Invalid selection. Please choose a number between 1 and 4.")
 
-
-    return force, area, original_length, change_in_length, material, yield_strength, youngs_modulus
-
-
-def material_management(calculated_youngs_modulus=None, input_yield_strength=None):
-    """Prompt user to select a preset or custom material."""
-    materials_database = {
-        "Steel": {"yield_strength": 250, "youngs_modulus": 200},
-        "Aluminum": {"yield_strength": 95, "youngs_modulus": 69},
-        "Titanium": {"yield_strength": 880, "youngs_modulus": 114}}
-    
+def validate_input() -> tuple[float, float, float, float, Material]:
+    """Prompt user and validate numeric inputs for the test."""
     while True:
-                print()
-                print("===Material Properties===")
-                print("1. Steel")
-                print("2. Aluminum")
-                print("3. Titanium")
-                print("4. Custom Material")
-    
-                material_choice = input("Select a material (1-4): ")
-    
-                if material_choice == '1':
-                    material = "Steel"
-                    yield_strength = materials_database["Steel"]["yield_strength"]
-                    youngs_modulus = materials_database["Steel"]["youngs_modulus"]
+        try:
+            force = float(input("Enter applied force (N): "))
+            if force < 0:
+                print("Error: Force cannot be negative.")
+            else:
+                break
+        except ValueError:
+            print("Error: Please enter a valid number for force.")
 
-                    return material, yield_strength, youngs_modulus
-    
-                elif material_choice == '2':
-                    material = "Aluminum"
-                    yield_strength = materials_database["Aluminum"]["yield_strength"]
-                    youngs_modulus = materials_database["Aluminum"]["youngs_modulus"]
+    while True:
+        try:
+            area = float(input("Enter cross-sectional area (m^2): "))
+            if area <= 0:
+                print("Error: Area must be greater than zero.")
+            else:
+                break
+        except ValueError:
+            print("Error: Please enter a valid number for area.")
 
-                    return material, yield_strength, youngs_modulus
-    
-                elif material_choice == '3':
-                    material = "Titanium"
-                    yield_strength = materials_database["Titanium"]["yield_strength"]
-                    youngs_modulus = materials_database["Titanium"]["youngs_modulus"]
+    while True:
+        try:
+            original_length = float(input("Enter original length (m): "))
+            if original_length <= 0:
+                print("Error: Original length must be greater than zero.")
+            else:
+                break
+        except ValueError:
+            print("Error: Please enter a valid number for original length.")
 
-                    return material, yield_strength, youngs_modulus
-                
-                elif material_choice == '4':
-                    material = input("Enter custom material name: ").strip()
-                    return material, None, None
-    
-                else:
-                    print("Error: Invalid selection. Please choose a number between 1 and 4.")
-    
+    while True:
+        try:
+            change_in_length = float(input("Enter change in length (m): "))
+            break
+        except ValueError:
+            print("Error: Please enter a valid number for change in length.")
+
+    material = material_management()
+    return force, area, original_length, change_in_length, material
 
 def record_calculation(calculations_history, material=None, force=None, area=None, original_length=None, 
                        change_in_length=None, stress=None, stress_mpa=None, strain=None, 
