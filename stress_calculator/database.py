@@ -43,3 +43,19 @@ def get_material_names() -> list[str]:
     return list(MATERIAL_DATABASE.keys())
 def get_material_names_tuple() -> tuple[str, ...]:
     return tuple(MATERIAL_DATABASE.keys())
+
+def get_material_categories() -> dict:
+    return { "Metal": [ 
+        name 
+        for name, material in MATERIAL_DATABASE.items() 
+        if isinstance(material, Metal) ],
+        "Plastic": [ 
+            name 
+            for name, 
+            material in MATERIAL_DATABASE.items() 
+            if isinstance(material, Plastic) ],
+            "Composite": [ 
+                name 
+                for name, 
+                material in MATERIAL_DATABASE.items() 
+                if isinstance(material, Composite) ] }
