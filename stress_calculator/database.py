@@ -91,4 +91,11 @@ def create_and_add_custom_material(
         properties=properties)
     add_material(material)
     return material
-    
+def display_material_database() -> None:
+    print("\n=== MATERIAL DATABASE ===")
+    if not MATERIAL_DATABASE:
+        print("No materials available.") 
+        return
+    for material in MATERIAL_DATABASE.values():
+        print(f"\nMaterial: {material.name}") 
+        material.properties.display()
