@@ -26,7 +26,7 @@ _Task 6 – Modular Integration was completed collaboratively by all members._
   - Standard Modules Used: json, csv, datetime, pathlib, os, and random.
 
 **How to Run the Program**
-To start the application, navigate to the root directory of the project in your terminal or command prompt and execute the main script:
+- To start the application, navigate to the root directory of the project in your terminal or command prompt and execute the main script:
 
 python main.py
 
