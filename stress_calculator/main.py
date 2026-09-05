@@ -189,7 +189,7 @@ def main() -> None:
         print("7. Save Material Database")
         print("8. Exit")
 
-        choice = input("\nSelect an option (1-7): ").strip()
+        choice = input("\nSelect an option (1-8): ").strip()
 
         if choice == "1":
             perform_calculation(collection)
