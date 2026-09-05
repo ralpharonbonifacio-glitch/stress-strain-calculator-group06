@@ -203,3 +203,25 @@ def material_management() -> Material:
                 "Error: Invalid selection. "
                 "Please choose a number between 1 and 4."
             )
+
+if __name__ == "__main__":
+    print("=== Material Module Test ===")
+
+    steel = create_steel()
+    aluminum = create_aluminum()
+    titanium = create_titanium()
+
+    print(steel)
+    print(aluminum)
+    print(titanium)
+
+    print("\nSteel properties:")
+    print(f"Density: {steel.properties.density} kg/m^3")
+    print(
+        f"Yield Strength: "
+        f"{steel.properties.yield_strength} MPa"
+    )
+    print(
+        f"Young's Modulus: "
+        f"{steel.properties.typical_youngs_modulus} GPa"
+    )
