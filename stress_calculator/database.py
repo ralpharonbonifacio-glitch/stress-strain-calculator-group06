@@ -39,5 +39,7 @@ def remove_material(name: str) -> Material:
         raise KeyError( f"Material '{name}' was not found." )
     return MATERIAL_DATABASE.pop(name)
 
-
-    
+def get_material_names() -> list[str]:
+    return list(MATERIAL_DATABASE.keys())
+def get_material_names_tuple() -> tuple[str, ...]:
+    return tuple(MATERIAL_DATABASE.keys())
