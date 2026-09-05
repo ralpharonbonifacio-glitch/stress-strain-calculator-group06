@@ -56,3 +56,45 @@ class Composite(Material):
             f"(Yield Strength: "
             f"{self.properties.yield_strength} MPa)"
         )
+
+def create_steel() -> Material:
+    """Create a standard steel material."""
+
+    properties = MaterialProperties(
+        density=7850,
+        yield_strength=250,
+        typical_youngs_modulus=200
+    )
+
+    return Metal(
+        name="Steel",
+        properties=properties
+    )
+
+def create_aluminum() -> Material:
+    """Create a standard aluminum material."""
+
+    properties = MaterialProperties(
+        density=2700,
+        yield_strength=95,
+        typical_youngs_modulus=70
+    )
+
+    return Metal(
+        name="Aluminum",
+        properties=properties
+    )
+
+def create_titanium() -> Material:
+    """Create a standard titanium material."""
+
+    properties = MaterialProperties(
+        density=4500,
+        yield_strength=880,
+        typical_youngs_modulus=114
+    )
+
+    return Metal(
+        name="Titanium",
+        properties=properties
+    )
