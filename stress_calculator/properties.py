@@ -16,3 +16,23 @@ class MaterialProperties:
             raise ValueError("Yield strength must be positive")
         if self.typical_youngs_modulus <= 0:
             raise ValueError("Young's modulus must be positive")
+
+    def as_dict(self) -> dict:
+        """Return the material properties as a dictionary."""
+
+        return {
+            "density": self.density,
+            "yield_strength": self.yield_strength,
+            "typical_youngs_modulus": self.typical_youngs_modulus
+        }
+
+    def display(self) -> None:
+        """ Display material properties."""
+
+        print(f"Density: {self.density} kg/m^3")
+        print(f"Yield Strength: "
+              f"{self.yield_strength} MPa")
+        print(f"Young's Modulus: "
+              f"{self.typical_youngs_modulus} GPa")
+
+    
