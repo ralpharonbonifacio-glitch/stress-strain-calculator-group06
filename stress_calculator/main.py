@@ -132,3 +132,24 @@ def run_random_test(collection: TestCollection) -> None:
 
     except ValueError as error:
         print(f"Error: {error}")
+
+def show_history(collection: TestCollection) -> None:
+    """Display the test history."""
+
+    collection.display_history()
+
+
+def show_summary(collection: TestCollection) -> None:
+    """Display the complete session summary."""
+
+    collection.display_session_summary()
+
+def save_results(collection: TestCollection) -> None:
+    """Save test results to JSON and CSV files."""
+
+    if len(collection) == 0:
+        print("\nNo test results to save.")
+        return
+
+    collection.save_json("test_history.json")
+    collection.export_csv("test_history.csv")
